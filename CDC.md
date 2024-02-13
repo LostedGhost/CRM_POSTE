@@ -29,6 +29,8 @@ Entre autres, nous pouvons énumérer les règles suivantes:
 - [ ] Un administrateur peut ajouer ou modifier ou supprimer une structure émettrice
 - [ ] Un administrateur peut définir ou modifier ou supprimer une agence
 - [ ] Chaque demande client génère un ticket
+- [ ] Chaque demande a un statut qui permet de suivre son avancée dans le système
+- [ ] Un statut de demande est soit initié, soit en instance, soit abouti, soit non abouti
 - [ ] Un client est enregistré une et une seule fois. A son arrivée les fois à venir, il fournit juste son numéro client.
 
 ## Contraintes techniques
@@ -40,6 +42,7 @@ Entre autres, nous pouvons énumérer les règles suivantes:
   - CSS
   - Javascript
   - Bootstrap
+  - Oracle
 
 - **Rendu**
   - Ergonomie et responsivité
