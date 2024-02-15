@@ -1,0 +1,16 @@
+from project.models import *
+
+##################### PROFIL ########################
+p = Profil(code="PRF00001", modifier_par="DEV", libelle="ADMIN")
+p.save()
+
+p = Profil(code="PRF00002", modifier_par="DEV", libelle="AGENT")
+p.save()
+
+##################### UTILISATEUR ###################
+u = Utilisateur(code="UTL00001", modifier_par="DEV", nom="TOPANOU", prenom="Ludel", email="topanoulucio@gmail.com", telephone="61012344", adresse="Cotonou", login="Lucio", password=chiffrement_cesar("0000", SECRET), profil=Profil.objects.get(code="PRF00001"))
+u.save()
+
+u = Utilisateur(code="UTL00002", modifier_par="DEV", nom="AZERTY", prenom="Test", email="testmail@gmail.com", telephone="21000000", adresse="Cotonou", login="aa", password=chiffrement_cesar("aa", SECRET), profil=Profil.objects.get(code="PRF00002"))
+u.save()
+

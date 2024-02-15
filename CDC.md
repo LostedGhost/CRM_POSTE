@@ -4,11 +4,11 @@ Dans le cadre du monitoring des services des bornes d'accès, la Poste du Bénin
 
 ## Règles de gestion
 
-Il s'agit des règles qui jalonneront le suivi du projet.  
-Entre autres, nous pouvons énumérer les règles suivantes:  
-- [ ] Les utilisateurs sont soit des agents de terrain, soit l'administrateur (agent, admin)
-- [ ] Un utilisateur est caractérisé par son nom d'utilisateur (unique) et son mot de passe
-- [ ] Seul l'administrateur ajoute les agents de terrain
+Il s'agit des règles qui jalonneront le suivi du projet.Entre autres, nous pouvons énumérer les règles suivantes:
+
+- [X] Les 		utilisateurs sont soit des agents de terrain, soit l'administrateur (agent, admin)
+- [X] Un utilisateur est caractérisé par son nom d'utilisateur (unique) et son mot de passe
+- [X] Seul l'administrateur ajoute les agents de terrain
 - [ ] L'administrateur peut retirer les droits d'activité à un agent
 - [ ] Un agent de terrain appartient à une et une seule agence de la Poste
 - [ ] Une agence a un code, une dénomination, une géolocalisation (longitude, latitude)
@@ -36,6 +36,7 @@ Entre autres, nous pouvons énumérer les règles suivantes:
 ## Contraintes techniques
 
 - **Technologies**
+
   - Python
   - Django
   - HTML
@@ -43,16 +44,13 @@ Entre autres, nous pouvons énumérer les règles suivantes:
   - Javascript
   - Bootstrap
   - Oracle
-
 - **Rendu**
+
   - Ergonomie et responsivité
   - Accessible et dynamique
-  - Charte graphique
-
+  - Charte graphique (Jaune : #f8d04b)
 - **Livraison**
+
   - Maintenances évolutives et correctives
   - Historisation des interactions
   - Documentation d'utilisation
-
-
-
