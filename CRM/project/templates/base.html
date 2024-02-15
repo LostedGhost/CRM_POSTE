@@ -25,6 +25,8 @@
 	<link rel="stylesheet" href="{% static 'assets-admin/css/semi-dark.css' %}" />
 	<link rel="stylesheet" href="{% static 'assets-admin/css/header-colors.css' %}" />
     <link href="{% static 'assets-admin/plugins/datatable/css/dataTables.bootstrap5.min.css' %}" rel="stylesheet" />
+	<link href="{% static 'assets-admin/plugins/select2/css/select2.min.css' %}" rel="stylesheet" />
+	<link href="{% static 'assets-admin/plugins/select2/css/select2-bootstrap4.css' %}" rel="stylesheet" />
 	<title>
     {% block title %}
     {% endblock %}
@@ -42,7 +44,7 @@
 				<div id="imag-logo">
 					<img src="{% static 'assets-admin/images/official_logo.png' %}" class="logo-icon reduce-icon" alt="logo icon">
 				</div>
-				<div class="toggle-icon ms-auto text-dark bold"><i class='lni lni-list'></i>
+				<div class="toggle-icon ms-auto bold"><i class='lni lni-list'></i>
 				</div>
 			</div>
 			<!--navigation-->
@@ -60,7 +62,22 @@
 					</ul>
 				</li>
 				<li class="menu-label">Administration</li>
-                <li>
+                
+				<li>
+					<a class="has-arrow" href="javascript:;">
+						<div class="parent-icon"><i class="bx bx-buildings"></i>
+						</div>
+						<div class="menu-title">Agence</div>
+					</a>
+					<ul>
+                        <li> <a href="/agence/list"><i class="bx bx-list-ol"></i>Liste</a>
+						</li>
+                        <li> <a href="/agence/add"><i class="bx bx-plus"></i>Ajout</a>
+						</li>
+					</ul>
+				</li>
+
+				<li>
 					<a class="has-arrow" href="javascript:;">
 						<div class="parent-icon"><i class="bx bx-user-circle"></i>
 						</div>
@@ -75,26 +92,6 @@
 						</li>
 					</ul>
 				</li>
-
-				<!-- <li>
-					<a class="has-arrow" href="javascript:;">
-						<div class="parent-icon"><i class="bx bx-menu"></i>
-						</div>
-						<div class="menu-title">Menu Levels</div>
-					</a>
-					<ul>
-						<li> <a class="has-arrow" href="javascript:;"><i class="bx bx-right-arrow-alt"></i>Level One</a>
-							<ul>
-								<li> <a class="has-arrow" href="javascript:;"><i class="bx bx-right-arrow-alt"></i>Level Two</a>
-									<ul>
-										<li> <a href="javascript:;"><i class="bx bx-right-arrow-alt"></i>Level Three</a>
-										</li>
-									</ul>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</li> -->
 			</ul>
             {%else%}
             <ul class="metismenu" id="menu">
@@ -123,26 +120,7 @@
 						</li>
 					</ul>
 				</li>
-
-				<!-- <li>
-					<a class="has-arrow" href="javascript:;">
-						<div class="parent-icon"><i class="bx bx-menu"></i>
-						</div>
-						<div class="menu-title">Menu Levels</div>
-					</a>
-					<ul>
-						<li> <a class="has-arrow" href="javascript:;"><i class="bx bx-right-arrow-alt"></i>Level One</a>
-							<ul>
-								<li> <a class="has-arrow" href="javascript:;"><i class="bx bx-right-arrow-alt"></i>Level Two</a>
-									<ul>
-										<li> <a href="javascript:;"><i class="bx bx-right-arrow-alt"></i>Level Three</a>
-										</li>
-									</ul>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</li> -->
+				
 			</ul>
             {%endif%}
 			<!--end navigation-->
@@ -158,7 +136,7 @@
 						<div class="position-relative search-bar-box">
 						</div>
 					</div>
-					<div class="top-menu ms-auto" hidden="true">
+					<div class="top-menu ms-auto" hidden>
 						<ul class="navbar-nav align-items-center">
 							<li class="nav-item mobile-search-icon">
 							</li>
@@ -332,7 +310,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="assets-admin/images/avatars/avatar-1.png" class="msg-avatar" alt="user avatar">
+													<img src="{% static 'assets-admin/images/avatars/avatar-1.png' %}" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Daisy Anderson <span class="msg-time float-end">5 sec
@@ -344,7 +322,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="assets-admin/images/avatars/avatar-2.png" class="msg-avatar" alt="user avatar">
+													<img src="{% static 'assets-admin/images/avatars/avatar-2.png' %}" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Althea Cabardo <span class="msg-time float-end">14
@@ -356,7 +334,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="assets-admin/images/avatars/avatar-3.png" class="msg-avatar" alt="user avatar">
+													<img src="{% static 'assets-admin/images/avatars/avatar-3.png' %}" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Oscar Garner <span class="msg-time float-end">8 min
@@ -368,7 +346,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="assets-admin/images/avatars/avatar-4.png" class="msg-avatar" alt="user avatar">
+													<img src="{% static 'assets-admin/images/avatars/avatar-4.png' %}" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Katherine Pechon <span class="msg-time float-end">15
@@ -380,7 +358,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="assets-admin/images/avatars/avatar-5.png" class="msg-avatar" alt="user avatar">
+													<img src="{% static 'assets-admin/images/avatars/avatar-5.png' %}" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Amelia Doe <span class="msg-time float-end">22 min
@@ -392,7 +370,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="assets-admin/images/avatars/avatar-6.png" class="msg-avatar" alt="user avatar">
+													<img src="{% static 'assets-admin/images/avatars/avatar-6.png' %}" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Cristina Jhons <span class="msg-time float-end">2 hrs
@@ -404,7 +382,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="assets-admin/images/avatars/avatar-7.png" class="msg-avatar" alt="user avatar">
+													<img src="{% static 'assets-admin/images/avatars/avatar-7.png' %}" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">James Caviness <span class="msg-time float-end">4 hrs
@@ -416,7 +394,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="assets-admin/images/avatars/avatar-8.png" class="msg-avatar" alt="user avatar">
+													<img src="{% static 'assets-admin/images/avatars/avatar-8.png' %}" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Peter Costanzo <span class="msg-time float-end">6 hrs
@@ -428,7 +406,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="assets-admin/images/avatars/avatar-9.png" class="msg-avatar" alt="user avatar">
+													<img src="{% static 'assets-admin/images/avatars/avatar-9.png' %}" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">David Buckley <span class="msg-time float-end">2 hrs
@@ -440,7 +418,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="assets-admin/images/avatars/avatar-10.png" class="msg-avatar" alt="user avatar">
+													<img src="{% static 'assets-admin/images/avatars/avatar-10.png' %}" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Thomas Wheeler <span class="msg-time float-end">2 days
@@ -452,7 +430,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="assets-admin/images/avatars/avatar-11.png" class="msg-avatar" alt="user avatar">
+													<img src="{% static 'assets-admin/images/avatars/avatar-11.png' %}" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Johnny Seitz <span class="msg-time float-end">5 days
@@ -536,9 +514,24 @@
 			$('#myDataTable').DataTable();
 		  } );
 	</script>
-	<script src="{% static 'assets-admin/js/app.js' %}"></script>
+	
     <script src="{% static 'assets-admin/plugins/datatable/js/jquery.dataTables.min.js' %}"></script>
 	<script src="{% static 'assets-admin/plugins/datatable/js/dataTables.bootstrap5.min.js' %}"></script>
+	<script src="{% static 'assets-admin/plugins/select2/js/select2.min.js' %}"></script>
+	<script>
+		$('.single-select').select2({
+			theme: 'bootstrap4',
+			width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+			placeholder: $(this).data('placeholder'),
+			allowClear: Boolean($(this).data('allow-clear')),
+		});
+		$('.multiple-select').select2({
+			theme: 'bootstrap4',
+			width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+			placeholder: $(this).data('placeholder'),
+			allowClear: Boolean($(this).data('allow-clear')),
+		});
+	</script>
     <script>
 		$(document).ready(function () {
 			$("#show_hide_password a").on('click', function (event) {
@@ -555,7 +548,7 @@
 			});
 		});
 	</script>
-    
+    <script src="{% static 'assets-admin/js/app.js' %}"></script>
 </body>
 
 </html>

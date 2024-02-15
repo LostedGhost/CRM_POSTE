@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %} Ajout d'agence {% endblock %}
+{% block title %} Modification d'agence {% endblock %}
 
 {% block body %}
-<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>AJOUT D'AGENCE</h6>
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>MODIFICATION D'AGENCE</h6>
 
 <div class="div-center">
     <div class="card mt-4 col-md-10 div-center">
@@ -23,7 +23,7 @@
                             <label class="col-sm-12 col-form-label">Intitulé *</label>
                             <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-building'></i></span>
                                 <input type="text" class="form-control" name="intitule" id="inputIntitule" 
-                                    placeholder="Intitule" required/> 
+                                    placeholder="Intitule" required value="{{agence.intitule}}"/> 
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -32,7 +32,11 @@
                                 <select name="site" id="inputSite" class="form-control single-select" required>
                                     <option value="">Sélectionnez une ville ou localité</option>
                                     {%for ville in villes%}
-                                    <option value="{{ville.intitule}}">{{ville.intitule}}</option>
+                                        {%if ville.intitule == agence.site%}
+                                            <option value="{{ville.intitule}}" selected>{{ville.intitule}}</option>
+                                        {%else%}
+                                            <option value="{{ville.intitule}}">{{ville.intitule}}</option>
+                                        {%endif%}
                                     {%endfor%}
                                 </select>
                             </div>

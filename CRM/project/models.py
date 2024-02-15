@@ -33,6 +33,18 @@ class Profil(models.Model):
     is_deleted = models.BooleanField(default=False)
     libelle = models.CharField(max_length=MAX_LABEL_LENGTH)
 
+class Ville(models.Model):
+    id = models.AutoField(primary_key=True, auto_created=True)
+    code = models.CharField(max_length=MAX_CODE_LENGTH)
+    date_creation = models.DateField(auto_now_add=True)
+    date_cessation = models.DateField(default=INFINITY_DATE)
+    modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
+    is_deleted = models.BooleanField(default=False)
+
+    intitule = models.CharField(max_length=MAX_LABEL_LENGTH)
+    code_postal = models.CharField(max_length=MAX_LABEL_LENGTH)
+    pays = models.CharField(max_length=MAX_LABEL_LENGTH)
+
 class Agence(models.Model):
     id = models.AutoField(primary_key=True, auto_created=True)
     code = models.CharField(max_length=MAX_CODE_LENGTH)
@@ -43,8 +55,8 @@ class Agence(models.Model):
     
     intitule = models.CharField(max_length=MAX_LABEL_LENGTH)
     site = models.CharField(max_length=MAX_LABEL_LENGTH)
-    geolocalisation_longitude = models.IntegerField(default=0)
-    geolocalisation_latitude = models.IntegerField(default=0)
+    geolocalisation_longitude = models.FloatField(default=0)
+    geolocalisation_latitude = models.FloatField(default=0)
 
 class Utilisateur(models.Model):
     id = models.AutoField(primary_key=True, auto_created=True)
@@ -79,7 +91,7 @@ class Utilisateur(models.Model):
 class AddUsersFiles(models.Model):
     fichier_xl = models.FileField(upload_to="excel_files", null=True)
 
-class Ticket(models.Model):
+class Entite(models.Model):
     id = models.AutoField(primary_key=True, auto_created=True)
     code = models.CharField(max_length=MAX_CODE_LENGTH)
     date_creation = models.DateField(auto_now_add=True)
@@ -87,6 +99,28 @@ class Ticket(models.Model):
     modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
     is_deleted = models.BooleanField(default=False)
     
+    denomination = models.CharField(max_length=MAX_LABEL_LENGTH)
+
+class Structure(models.Model):
+    id = models.AutoField(primary_key=True, auto_created=True)
+    code = models.CharField(max_length=MAX_CODE_LENGTH)
+    date_creation = models.DateField(auto_now_add=True)
+    date_cessation = models.DateField(default=INFINITY_DATE)
+    modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
+    is_deleted = models.BooleanField(default=False)
+    
+    denomination = models.CharField(max_length=MAX_LABEL_LENGTH)
+
+class Service(models.Model):
+    id = models.AutoField(primary_key=True, auto_created=True)
+    code = models.CharField(max_length=MAX_CODE_LENGTH)
+    date_creation = models.DateField(auto_now_add=True)
+    date_cessation = models.DateField(default=INFINITY_DATE)
+    modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
+    is_deleted = models.BooleanField(default=False)
+    
+    denomination = models.CharField(max_length=MAX_LABEL_LENGTH)
+    structure = models.ForeignKey(Structure, on_delete=models.CASCADE, related_name="structure_service")
 
 class Client(models.Model):
     id = models.AutoField(primary_key=True, auto_created=True)
@@ -102,3 +136,23 @@ class Client(models.Model):
     telephone = models.CharField(max_length=MAX_LABEL_LENGTH)
     email = models.EmailField(max_length=MAX_LABEL_LENGTH)
     adresse = models.CharField(max_length=MAX_LABEL_LENGTH)
+
+class StatutDemande(models.Model):
+    id = models.AutoField(primary_key=True, auto_created=True)
+    code = models.CharField(max_length=MAX_CODE_LENGTH)
+    date_creation = models.DateField(auto_now_add=True)
+    date_cessation = models.DateField(default=INFINITY_DATE)
+    modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
+    is_deleted = models.BooleanField(default=False)
+    
+    libelle = models.CharField(max_length=MAX_LABEL_LENGTH)
+
+class Demande(models.Model):
+    id = models.AutoField(primary_key=True, auto_created=True)
+    code = models.CharField(max_length=MAX_CODE_LENGTH)
+    date_creation = models.DateField(auto_now_add=True)
+    date_cessation = models.DateField(default=INFINITY_DATE)
+    modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
+    is_deleted = models.BooleanField(default=False)
+    
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="client_demande")

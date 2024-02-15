@@ -1,5 +1,340 @@
 from project.models import *
 
+##################### VILLE ########################
+# ABOMEY
+v = Ville(code="VIL00001", modifier_par="DEV", intitule="ABOMEY")
+v.save()
+
+# ABOMEY-CALAVI
+v = Ville(code="VIL00002", modifier_par="DEV", intitule="ABOMEY-CALAVI")
+v.save()
+
+# AHOUDO
+v = Ville(code="VIL00003", modifier_par="DEV", intitule="AHOUDO")
+v.save()
+
+# AKPASSI
+v = Ville(code="VIL00004", modifier_par="DEV", intitule="AKPASSI")
+v.save()
+
+# ALLADA
+v = Ville(code="VIL00005", modifier_par="DEV", intitule="ALLADA")
+v.save()
+
+# ANGOHO
+v = Ville(code="VIL00006", modifier_par="DEV", intitule="ANGOHO")
+v.save()
+
+# APLOGAN
+v = Ville(code="VIL00007", modifier_par="DEV", intitule="APLOGAN")
+v.save()
+
+# ATINKANME
+v = Ville(code="VIL00008", modifier_par="DEV", intitule="ATINKANME")
+v.save()
+
+# ATTIKPO
+v = Ville(code="VIL00009", modifier_par="DEV", intitule="ATTIKPO")
+v.save()
+
+# AVOGBO
+v = Ville(code="VIL00010", modifier_par="DEV", intitule="AVOGBO")
+v.save()
+
+# AVRANKOU
+v = Ville(code="VIL00011", modifier_par="DEV", intitule="AVRANKOU")
+v.save()
+
+# BANTE
+v = Ville(code="VIL00012", modifier_par="DEV", intitule="BANTE")
+v.save()
+
+# BASSILA
+v = Ville(code="VIL00013", modifier_par="DEV", intitule="BASSILA")
+v.save()
+
+# BATIA
+v = Ville(code="VIL00014", modifier_par="DEV", intitule="BATIA")
+v.save()
+
+# BEME
+v = Ville(code="VIL00015", modifier_par="DEV", intitule="BEME")
+v.save()
+
+# BEOUE
+v = Ville(code="VIL00016", modifier_par="DEV", intitule="BEOUE")
+v.save()
+
+# BETOU
+v = Ville(code="VIL00017", modifier_par="DEV", intitule="BETOU")
+v.save()
+
+# BILICHO
+v = Ville(code="VIL00018", modifier_par="DEV", intitule="BILICHO")
+v.save()
+
+# BIRNIN
+v = Ville(code="VIL00019", modifier_par="DEV", intitule="BIRNIN")
+v.save()
+
+# BODON
+v = Ville(code="VIL00020", modifier_par="DEV", intitule="BODON")
+v.save()
+
+# BOHICON
+v = Ville(code="VIL00021", modifier_par="DEV", intitule="BOHICON")
+v.save()
+
+# BOMA
+v = Ville(code="VIL00022", modifier_par="DEV", intitule="BOMA")
+v.save()
+
+# BONOU
+v = Ville(code="VIL00023", modifier_par="DEV", intitule="BONOU")
+v.save()
+
+# BOUENI
+v = Ville(code="VIL00024", modifier_par="DEV", intitule="BOUENI")
+v.save()
+
+# BOUKOMBE
+v = Ville(code="VIL00025", modifier_par="DEV", intitule="BOUKOMBE")
+v.save()
+
+# BOUZOU
+v = Ville(code="VIL00026", modifier_par="DEV", intitule="BOUZOU")
+v.save()
+
+# BUKPONGBE
+v = Ville(code="VIL00027", modifier_par="DEV", intitule="BUKPONGBE")
+v.save()
+
+# COME
+v = Ville(code="VIL00028", modifier_par="DEV", intitule="COME")
+v.save()
+
+# COPELLO
+v = Ville(code="VIL00029", modifier_par="DEV", intitule="COPELLO")
+v.save()
+
+# COTONOU
+v = Ville(code="VIL00030", modifier_par="DEV", intitule="COTONOU")
+v.save()
+
+# COVE
+v = Ville(code="VIL00031", modifier_par="DEV", intitule="COVE")
+v.save()
+
+# DEKPO
+v = Ville(code="VIL00032", modifier_par="DEV", intitule="DEKPO")
+v.save()
+
+# DJOGBE
+v = Ville(code="VIL00033", modifier_par="DEV", intitule="DJOGBE")
+v.save()
+
+# DJOVE
+v = Ville(code="VIL00034", modifier_par="DEV", intitule="DJOVE")
+v.save()
+
+# DJOUROU
+v = Ville(code="VIL00035", modifier_par="DEV", intitule="DJOUROU")
+v.save()
+
+# DO-TOE
+v = Ville(code="VIL00036", modifier_par="DEV", intitule="DO-TOE")
+v.save()
+
+# DOGGODOUROU
+v = Ville(code="VIL00037", modifier_par="DEV", intitule="DOGGODOUROU")
+v.save()
+
+# DOGKO
+v = Ville(code="VIL00038", modifier_par="DEV", intitule="DOGKO")
+v.save()
+
+# DOGOKPO
+v = Ville(code="VIL00039", modifier_par="DEV", intitule="DOGOKPO")
+v.save()
+
+# DOHOU
+v = Ville(code="VIL00040", modifier_par="DEV", intitule="DOHOU")
+v.save()
+
+# DOSSO
+v = Ville(code="VIL00041", modifier_par="DEV", intitule="DOSSO")
+v.save()
+
+# EKPON
+v = Ville(code="VIL00042", modifier_par="DEV", intitule="EKPON")
+v.save()
+
+# GOGOUNOU
+v = Ville(code="VIL00043", modifier_par="DEV", intitule="GOGOUNOU")
+v.save()
+
+# HILA-CONDJI
+v = Ville(code="VIL00044", modifier_par="DEV", intitule="HILA-CONDJI")
+v.save()
+
+# HOUNDE
+v = Ville(code="VIL00045", modifier_par="DEV", intitule="HOUNDE")
+v.save()
+
+# IDIGNY
+v = Ville(code="VIL00046", modifier_par="DEV", intitule="IDIGNY")
+v.save()
+
+# IFANGNI
+v = Ville(code="VIL00047", modifier_par="DEV", intitule="IFANGNI")
+v.save()
+
+# KANDI
+v = Ville(code="VIL00048", modifier_par="DEV", intitule="KANDI")
+v.save()
+
+# KARIMAMA
+v = Ville(code="VIL00049", modifier_par="DEV", intitule="KARIMAMA")
+v.save()
+
+# KETOU
+v = Ville(code="VIL00050", modifier_par="DEV", intitule="KETOU")
+v.save()
+
+# KOKO
+v = Ville(code="VIL00051", modifier_par="DEV", intitule="KOKO")
+v.save()
+
+# KOUANDE
+v = Ville(code="VIL00052", modifier_par="DEV", intitule="KOUANDE")
+v.save()
+
+# KOUPELA
+v = Ville(code="VIL00053", modifier_par="DEV", intitule="KOUPELA")
+v.save()
+
+# LOME
+v = Ville(code="VIL00054", modifier_par="DEV", intitule="LOME")
+v.save()
+
+# LOKOSSA
+v = Ville(code="VIL00055", modifier_par="DEV", intitule="LOKOSSA")
+v.save()
+
+# MATHIEU
+v = Ville(code="VIL00056", modifier_par="DEV", intitule="MATHIEU")
+v.save()
+
+# NATITINGOU
+v = Ville(code="VIL00057", modifier_par="DEV", intitule="NATITINGOU")
+v.save()
+
+# NIAMEY
+v = Ville(code="VIL00058", modifier_par="DEV", intitule="NIAMEY")
+v.save()
+
+# OUAKE
+v = Ville(code="VIL00059", modifier_par="DEV", intitule="OUAKE")
+v.save()
+
+# OUESSE
+v = Ville(code="VIL00060", modifier_par="DEV", intitule="OUESSE")
+v.save()
+
+# OUIDAH
+v = Ville(code="VIL00061", modifier_par="DEV", intitule="OUIDAH")
+v.save()
+
+# PARAKOU
+v = Ville(code="VIL00062", modifier_par="DEV", intitule="PARAKOU")
+v.save()
+
+# PATTER
+v = Ville(code="VIL00063", modifier_par="DEV", intitule="PATTER")
+v.save()
+
+# PEHUNCO
+v = Ville(code="VIL00064", modifier_par="DEV", intitule="PEHUNCO")
+v.save()
+
+# PORGA
+v = Ville(code="VIL00065", modifier_par="DEV", intitule="PORGA")
+v.save()
+
+# PORTO-NOVO
+v = Ville(code="VIL00066", modifier_par="DEV", intitule="PORTO-NOVO")
+v.save()
+
+# SAVALOU
+v = Ville(code="VIL00067", modifier_par="DEV", intitule="SAVALOU")
+v.save()
+
+# SEGBOUE
+v = Ville(code="VIL00068", modifier_par="DEV", intitule="SEGBOUE")
+v.save()
+
+# SEGBANA
+v = Ville(code="VIL00069", modifier_par="DEV", intitule="SEGBANA")
+v.save()
+
+# SINENDE
+v = Ville(code="VIL00070", modifier_par="DEV", intitule="SINENDE")
+v.save()
+
+# SOTA
+v = Ville(code="VIL00071", modifier_par="DEV", intitule="SOTA")
+v.save()
+
+# TANKEDE
+v = Ville(code="VIL00072", modifier_par="DEV", intitule="TANKEDE")
+v.save()
+
+# TCHATCHOU
+v = Ville(code="VIL00073", modifier_par="DEV", intitule="TCHATCHOU")
+v.save()
+
+# TCHIKANDOU
+v = Ville(code="VIL00074", modifier_par="DEV", intitule="TCHIKANDOU")
+v.save()
+
+# TCHIROU
+v = Ville(code="VIL00075", modifier_par="DEV", intitule="TCHIROU")
+v.save()
+
+# TOKE-LEHE
+v = Ville(code="VIL00076", modifier_par="DEV", intitule="TOKE-LEHE")
+v.save()
+
+# TORI-BOSSITO
+v = Ville(code="VIL00077", modifier_par="DEV", intitule="TORI-BOSSITO")
+v.save()
+
+# TOVE
+v = Ville(code="VIL00078", modifier_par="DEV", intitule="TOVE")
+v.save()
+
+# ZAGNANADO
+v = Ville(code="VIL00079", modifier_par="DEV", intitule="ZAGNANADO")
+v.save()
+
+# ZAKPO
+v = Ville(code="VIL00080", modifier_par="DEV", intitule="ZAKPO")
+v.save()
+
+# ZANGNANADO
+v = Ville(code="VIL00081", modifier_par="DEV", intitule="ZANGNANADO")
+v.save()
+
+# ZOGAN
+v = Ville(code="VIL00082", modifier_par="DEV", intitule="ZOGAN")
+v.save()
+
+# ZOUNGOU
+v = Ville(code="VIL00083", modifier_par="DEV", intitule="ZOUNGOU")
+v.save()
+
+
+
 ##################### PROFIL ########################
 p = Profil(code="PRF00001", modifier_par="DEV", libelle="ADMIN")
 p.save()

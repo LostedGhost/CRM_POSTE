@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 import openpyxl
+from CRM.settings import BASE_DIR
 from .models import *
 
 # Create your views here.
@@ -112,7 +113,7 @@ def add_many_agents(request):
         usersFile = request.FILES["usersFile"]
         usersFile = AddUsersFiles(fichier_xl=usersFile)
         usersFile.save()
-        classeur = openpyxl.load_workbook(str(settings.BASE_DIR) + usersFile.fichier_xl.url)
+        classeur = openpyxl.load_workbook(str(BASE_DIR) + usersFile.fichier_xl.url)
         feuille = classeur.active
         donnees = []
         for row in feuille.iter_rows(values_only=True):
@@ -125,3 +126,52 @@ def add_many_agents(request):
                   {
                       "utilisateur": user,
                   })
+
+def liste_agences(request):
+    user_identifiant = request.session.get('user')
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.get(id=user_identifiant)
+    agences = Agence.objects.filter(date_cessation=INFINITY_DATE)
+    return render(request, 'agence/list.html',
+                  {"utilisateur": user,
+                   "agences": agences,
+                   }
+    )
+def ajout_agence(request):
+    user_identifiant = request.session.get('user')
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.get(id=user_identifiant)
+    villes = Ville.objects.all()
+    if request.POST:
+        intitule = request.POST["intitule"].upper()
+        site = request.POST["site"].upper()
+        longitude = float(request.POST["geolocalisation_longitude"])
+        latitude = float(request.POST["geolocalisation_latitude"])
+        
+        try:
+            Agence.objects.get(intitule=intitule)
+            return render(request, 'agence/add.html', {'error': 'L\'agence existe déjà.'})
+        except:
+            pass
+        try:
+            Agence.objects.get(longitude=longitude, latitude=latitude)
+            return render(request, 'agence/add.html', {'error': 'L\'agence existe déjà.'})
+        except:
+            pass
+        try:
+            Agence.objects.get(intitule=intitule,site=site)
+            return render(request, 'agence/add.html', {'error': 'L\'agence existe déjà.'})
+        except:
+            pass
+        code = generate_code("AGC", Agence.objects.count()+1)
+        modifier_par = user.code
+        agence = Agence(code = code, modifier_par =modifier_par ,site=site, intitule=intitule, geolocalisation_longitude=longitude, geolocalisation_latitude=latitude)
+        agence.save()
+        return redirect("/agence/list")
+    return render(request, 'agence/add.html',
+                  {"utilisateur": user,
+                   "villes": villes,
+                   }
+    )

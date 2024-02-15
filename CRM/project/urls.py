@@ -10,5 +10,7 @@ urlpatterns = [
     path(r'agents/list', views.liste_agent, name="liste_agent"),
     path(r'agents/add', views.ajout_agent, name="ajout_agent"),
     path(r'agents/addMany', views.add_many_agents, name="add_many_agents"),
+    path(r'agence/list', views.liste_agences, name="liste_agences"),
+    path(r'agence/add', views.ajout_agence, name="ajout_agence"),
     
 ]
