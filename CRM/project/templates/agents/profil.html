@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Profil {% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-column align-items-center text-center p-3">
+                    <img src="{%if utilisateur.photo %}{{ utilisateur.photo.url }}{% else %}{% static 'assets-admin/images/icons/user.png' %}{%endif%}" alt="Admin" class="rounded-circle p-1 " width="150" height="150">
+                    <div class="mt-3">
+                        <h4>{{utilisateur.prenom}} {{utilisateur.nom}}</h4>
+                        <p class="text-secondary mb-1">{{utilisateur.profil.libelle}}</p>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card">
+            
+                
+            
+            <div class="card-body">
+                <div class="row mb-3">
+                    <h5 class="text-primary">Informations Utilisateurs</h2>
+                </div>
+                <hr>
+                <form id="form" name="myform" method="POST"  
+                class="form-horizontal bg-form row g-3 mx-auto mt-3" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">NOM</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" name="nom" value="{{utilisateur.nom}}" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Prénom</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" name="prenom" value="{{utilisateur.prenom}}" required/>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Email</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="email" class="form-control" name="email" value="{{utilisateur.email}}" required/>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Téléphone</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" name="telephone" class="form-control" value="{{utilisateur.telephone}}" required/>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Adresse</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" name="adresse" class="form-control" value="{{utilisateur.adresse}}" required/>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Date de naissance</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="date" name="date_naissance" class="form-control" id="inputDateNaissance" placeholder="JJ/MM/AAAA" required value="{{utilisateur.date_naissance_rep}}" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Mot de passe</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="password" name="password" class="form-control" id="inputPassword" placeholder="********" required value="{{utilisateur.true_pass}}" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Photo de profil</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="file" name="photo" accept=".png, .jpg" class="form-control" id="inputPhoto" placeholder="Photo de profil"/>
+                    </div>
+                </div>
+
+                <div class="div-center">
+                    <div class="text-secondary">
+                        <button type="submit" class="btn button-save px-4">Modifier </button>
+                    </div>
+                    <div class="text-secondary">
+                        <a href="/">
+                            <button type="button" class="btn button-secondary px-4">Quitter </button>
+                        </a>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

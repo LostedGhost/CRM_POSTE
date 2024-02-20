@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Modification de service {% endblock %}
+
+{% block body %}
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>MODIFICATION DE SERVICE</h6>
+
+<div class="div-center">
+    <div class="card mt-4 col-md-10 div-center">
+        <div class="card-body">
+            <div class="border p-4 rounded">
+                <div class="card-title d-flex align-items-center">
+                    <div>
+                        <i class="bx bxs-bookmark  me-1 font-22 text-blue-sewar"></i>
+                    </div>
+                    <h5 class="mb-0 text-blue-sewar">Informations Générales</h5>
+                </div>
+                <hr />
+                <form id="form" name="myform" method="POST"  
+                    class="form-horizontal bg-form row g-3"  enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <div class="col-md-6">
+                            <label class="col-sm-12 col-form-label">Intitulé *</label>
+                            <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-building'></i></span>
+                                <input type="text" class="form-control" name="intitule" id="inputDenomination" 
+                                    placeholder="DENOMINATION" value="{{service.intitule}}" required/> 
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mx-auto">
+                            <label class="col-sm-6 col-form-label">Structure *</label>
+                            <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-building' ></i></span>
+                                <select name="structure" id="inputSite" class="form-control single-select" required>
+                                    <option value="">Sélectionnez une structure</option>
+                                    {%for structure in structures%}
+                                    {%if service.structure.code == structure.code%}
+                                    <option value="{{structure.code}}" selected>{{structure.entite.denomination}} - {{structure.denomination}} </option>
+                                    {%else%}
+                                    <option value="{{structure.code}}">{{structure.entite.denomination}} - {{structure.denomination}} </option>
+                                    {%endif%}
+                                    
+                                    {%endfor%}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mx-auto">
+                            <label class="col-sm-6 col-form-label">Photo *</label>
+                            <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-photo-album' ></i></span>
+                                <input type="file" name="photo" accept=".png, .jpg" class="form-control" id="inputPhoto" placeholder="Photo de profil"/>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group text-center">
+                            <button class="btn btn-blue-s mr-2" type="submit" id="enregistrer" 
+                            > Enregistrer
+                            </button >
+                            <a href="/service/list" class="btn btn-light border" type="button" id="fermer">Fermer
+                            </a>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

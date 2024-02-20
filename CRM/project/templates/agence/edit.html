@@ -46,7 +46,7 @@
                             <label class="col-sm-12 col-form-label">Longitude *</label>
                             <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-up-arrow-alt' ></i></span>
                                 <input type="text" class="form-control" name="geolocalisation_longitude" id="inputLong" 
-                                placeholder="XX.XX" required/>
+                                placeholder="XX.XX" required value="{{agence.geolocalisation_longitude}}"/>
                             </div>
                         </div>
 
@@ -54,7 +54,7 @@
                             <label class="col-sm-12 col-form-label">Latitude *</label>
                             <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-right-arrow-alt' ></i></span>
                                 <input type="text" class="form-control" name="geolocalisation_latitude" id="inputLat" 
-                                placeholder="XX.XX" required/>
+                                placeholder="XX.XX" required value="{{agence.geolocalisation_latitude}}"/>
                             </div>
                         </div>
                         
@@ -62,7 +62,7 @@
                             <button class="btn btn-blue-s mr-2" type="submit" id="enregistrer" 
                             > Enregistrer
                             </button >
-                            <a href="list" class="btn btn-light border" type="button" id="fermer">Fermer
+                            <a href="/agence/list" class="btn btn-light border" type="button" id="fermer">Fermer
                             </a>
                         </div>
                 </form>

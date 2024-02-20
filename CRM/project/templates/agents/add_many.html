@@ -19,11 +19,28 @@
                 <form id="form" name="myform" method="POST"  
                     class="form-horizontal bg-form row g-3 mx-auto" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="col-md-12 mx-auto">
+                    <div class="col-md-12 mx-auto mb-3">
                         <label class="col-sm-12 col-form-label">Chargement du fichier *</label>
                         <div class="col-sm-12">
                             <input class="form-control" type="file" name="agentsFile" accept=".xlsx" required>
                         </div>
+                    </div>
+                    <div class="div-center mt-3">
+
+                    
+                    <figcaption class="blockquote-footer text-danger">Le fichier à charger doir respecter un format bien défini qui est le suivant:
+                        <br>
+                        <ul>
+                            <li>NOM;</li>
+                            <li>Prénom;</li>
+                            <li>Email;</li>
+                            <li>Téléphone;</li>
+                            <li>Adresse;</li>
+                            <li>Date de naissance (jj/mm/aaaa);</li>
+                            <li>Agence (Intitulé correct);</li>
+                            <li>Le fichier doit avoir une entête d'une seule ligne.</li>
+                        </ul>
+                    </figcaption>
                     </div>
                     <div class="form-group text-center">
                         <button class="btn btn-blue-s mx-2" type="submit" id="enregistrer" 

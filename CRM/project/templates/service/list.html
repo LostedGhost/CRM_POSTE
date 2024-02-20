@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Liste des services {% endblock %}
+
+{% block body %}
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>LISTE DES SERVICES</h6>
+
+				
+				<a class="btn btn-blue-s my-3 px-3 py-2" href="/service/add"><i class="lni lni-plus mr-2" style="font-size: 10px !important;"></i> Ajouter </a>
+
+				<div class="card">
+					<div class="card-body">
+						<div class="table-responsive">
+							<table id="myDataTable" class="table table-striped table-bordered table-hover my-3">
+								<thead>
+									<tr>
+										<th>Code</th>
+                                        <th>Photo</th>
+                                        <th>Intitulé</th>
+                                        <th>Structure</th>
+                                        <th>Entité</th>
+										<th class="text-end">Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+                                    {% for service in services %}
+                                    <tr>
+                                        <td>{{service.code}}</td>
+                                        <td><img src="{{service.photo.url}}" class="product-img-2" alt="service {{service.intitule}}"></td>
+                                        <td>{{service.intitule}}</td>
+                                        <td>{{service.structure.denomination}} </td>
+                                        <td>{{service.structure.entite.denomination}}</td>
+                                        <td class="text-end">
+                                            <a href="/service/edit/{{service.id}}">
+                                            <button data-elt-id=""
+											class="btn btn-sm btn-edit" type="button"
+											id="modifier" title="modifier" >
+											  <span class="bx bx-pencil"></span>
+											</button>
+                                            </a>
+                                            <button class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteService{{service.id}}"
+												title="supprimer" >
+												<span class="bx bx-trash"></span>
+											</button>
+											<div class="modal fade col-5" id="deleteService{{service.id}}" aria-labelledby="#exampleScrollableModal" tabindex="-1" aria-hidden="true">
+												<div class="modal-dialog modal-dialog-scrollable">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" id="exampleScrollableModal">Confirmation</h5>
+															<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+														<div class="modal-body text-center">La suppression de ce service est irréversible.</div>
+														<div class="modal-footer">
+															<a href="/service/delete/{{service.id}}">
+																<button type="button" class="btn btn-danger">Continuer</button>
+															</a>
+															<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+														</div>
+													</div>
+												</div>
+											</div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Liste des structures {% endblock %}
+
+{% block body %}
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>LISTE DES STRUCTURES</h6>
+
+				
+				<a class="btn btn-blue-s my-3 px-3 py-2" href="/structure/add"><i class="lni lni-plus mr-2" style="font-size: 10px !important;"></i> Ajouter </a>
+
+				<div class="card">
+					<div class="card-body">
+						<div class="table-responsive">
+							<table id="myDataTable" class="table table-striped table-bordered table-hover my-3">
+								<thead>
+									<tr>
+										<th>Code</th>
+                                        <th>Dénomination</th>
+                                        <th>Entité</th>
+										<th class="text-end">Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+                                    {% for structure in structures %}
+                                    <tr>
+                                        <td>{{structure.code}}</td>
+                                        <td>{{structure.denomination}}</td>
+                                        <td>{{structure.entite.denomination}} </td>
+                                        <td class="text-end">
+                                            <a href="/structure/edit/{{structure.id}}">
+                                            <button data-elt-id=""
+											class="btn btn-sm btn-edit" type="button"
+											id="modifier" title="modifier" >
+											  <span class="bx bx-pencil"></span>
+											</button>
+                                            </a>
+                                            <button class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteStructure{{structure.id}}"
+												title="supprimer" >
+												<span class="bx bx-trash"></span>
+											</button>
+											<div class="modal fade col-5" id="deleteStructure{{structure.id}}" aria-labelledby="#exampleScrollableModal" tabindex="-1" aria-hidden="true">
+												<div class="modal-dialog modal-dialog-scrollable">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" id="exampleScrollableModal">Confirmation</h5>
+															<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+														<div class="modal-body text-center">La suppression de cette structure entraînera la <br> désactivation de tous les services y étant associés.</div>
+														<div class="modal-footer">
+															<a href="/structure/delete/{{structure.id}}">
+																<button type="button" class="btn btn-danger">Continuer</button>
+															</a>
+															<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+														</div>
+													</div>
+												</div>
+											</div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+{% endblock %}

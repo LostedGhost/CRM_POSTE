@@ -4,7 +4,7 @@ from django.utils.html import strip_tags
 from django.core.mail import send_mail, EmailMultiAlternatives
 
 def generate_code(prefix, position):
-    s = prefix + '{:05d}'.format(position)
+    s = prefix + '{:020d}'.format(position)
     return s
 
 def generate_random(prefix):

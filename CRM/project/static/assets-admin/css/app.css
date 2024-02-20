@@ -2670,3 +2670,7 @@ input.search-control-2::placeholder {
 	justify-content: center;
 	align-items: center
 }
+
+thead{
+	background-color: rgba(6, 2, 17, 0.177);
+}

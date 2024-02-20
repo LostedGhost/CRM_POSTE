@@ -12,13 +12,14 @@
 					<div class="card-body">
 						<div class="table-responsive">
 							<table id="myDataTable" class="table table-striped table-bordered table-hover my-3">
-								<thead style="background-color: rgba(6, 2, 17, 0.177);">
+								<thead>
 									<tr>
 										<th>Code</th>
                                         <th>Login</th>
 										<th>Nom</th>
 										<th>Prenom</th>
 										<th class="text-center">Date de naissance</th>
+                                        <th>Agence</th>
 										<th class="">Active ?</th>
                                         <th>Supprimé ?</th>
 										<th class="text-end">Actions</th>
@@ -32,6 +33,7 @@
                                         <td>{{agent.nom}}</td>
                                         <td>{{agent.prenom}}</td>
                                         <td class="text-center">{{agent.date_naissance}}</td>
+                                        <td>{{agent.agence.intitule}}</td>
                                         <td class="text-center">
                                             {% if agent.active %}
                                             <span class="badge bg-success">Oui</span>
@@ -51,7 +53,7 @@
                                             <button data-elt-id=""
 											class="btn btn-sm btn-edit" type="button"
 											id="modifier" title="modifier" >
-											  <span class="bx bx-pencil"></span>
+											  <span class="lni lni-reply"></span>
 											</button>
                                             </a>
                                             <a href="/agents/delete/{{agent.id}}">

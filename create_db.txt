@@ -2,39 +2,39 @@ from project.models import *
 
 ##################### VILLE ########################
 # ABOMEY
-v = Ville(code="VIL00001", modifier_par="DEV", intitule="ABOMEY")
+v = Ville(code="VIL00000000000000001", modifier_par="DEV", intitule="ABOMEY")
 v.save()
 
 # ABOMEY-CALAVI
-v = Ville(code="VIL00002", modifier_par="DEV", intitule="ABOMEY-CALAVI")
+v = Ville(code="VIL00000000000000002", modifier_par="DEV", intitule="ABOMEY-CALAVI")
 v.save()
 
 # AHOUDO
-v = Ville(code="VIL00003", modifier_par="DEV", intitule="AHOUDO")
+v = Ville(code="VIL00000000000000003", modifier_par="DEV", intitule="AHOUDO")
 v.save()
 
 # AKPASSI
-v = Ville(code="VIL00004", modifier_par="DEV", intitule="AKPASSI")
+v = Ville(code="VIL00000000000000004", modifier_par="DEV", intitule="AKPASSI")
 v.save()
 
 # ALLADA
-v = Ville(code="VIL00005", modifier_par="DEV", intitule="ALLADA")
+v = Ville(code="VIL00000000000000005", modifier_par="DEV", intitule="ALLADA")
 v.save()
 
 # ANGOHO
-v = Ville(code="VIL00006", modifier_par="DEV", intitule="ANGOHO")
+v = Ville(code="VIL00000000000000006", modifier_par="DEV", intitule="ANGOHO")
 v.save()
 
 # APLOGAN
-v = Ville(code="VIL00007", modifier_par="DEV", intitule="APLOGAN")
+v = Ville(code="VIL00000000000000007", modifier_par="DEV", intitule="APLOGAN")
 v.save()
 
 # ATINKANME
-v = Ville(code="VIL00008", modifier_par="DEV", intitule="ATINKANME")
+v = Ville(code="VIL00000000000000008", modifier_par="DEV", intitule="ATINKANME")
 v.save()
 
 # ATTIKPO
-v = Ville(code="VIL00009", modifier_par="DEV", intitule="ATTIKPO")
+v = Ville(code="VIL00000000000000009", modifier_par="DEV", intitule="ATTIKPO")
 v.save()
 
 # AVOGBO
@@ -336,16 +336,25 @@ v.save()
 
 
 ##################### PROFIL ########################
-p = Profil(code="PRF00001", modifier_par="DEV", libelle="ADMIN")
+p = Profil(code="PRF00000000000000001", modifier_par="DEV", libelle="ADMIN")
 p.save()
 
-p = Profil(code="PRF00002", modifier_par="DEV", libelle="AGENT")
+p = Profil(code="PRF00000000000000002", modifier_par="DEV", libelle="AGENT")
 p.save()
 
 ##################### UTILISATEUR ###################
-u = Utilisateur(code="UTL00001", modifier_par="DEV", nom="TOPANOU", prenom="Ludel", email="topanoulucio@gmail.com", telephone="61012344", adresse="Cotonou", login="Lucio", password=chiffrement_cesar("0000", SECRET), profil=Profil.objects.get(code="PRF00001"))
+u = Utilisateur(code="UTL00000000000000001", modifier_par="DEV", nom="TOPANOU", prenom="Ludel", email="topanoulucio@gmail.com", telephone="61012344", adresse="Cotonou", login="Lucio", password=chiffrement_cesar("0000000000000000", SECRET), profil=Profil.objects.get(code="PRF00000000000000001"))
 u.save()
 
-u = Utilisateur(code="UTL00002", modifier_par="DEV", nom="AZERTY", prenom="Test", email="testmail@gmail.com", telephone="21000000", adresse="Cotonou", login="aa", password=chiffrement_cesar("aa", SECRET), profil=Profil.objects.get(code="PRF00002"))
+u = Utilisateur(code="UTL00000000000000002", modifier_par="DEV", nom="AZERTY", prenom="Test", email="testmail@gmail.com", telephone="21000000000000000000", adresse="Cotonou", login="aa", password=chiffrement_cesar("aa", SECRET), profil=Profil.objects.get(code="PRF00000000000000002"))
 u.save()
 
+u = Utilisateur(code="UTL00000000000000003", modifier_par="DEV", nom="NAME", prenom="Surname", email="admincrm@gmail.com", telephone="61000000000000000000", adresse="Cotonou", login="admin", password=chiffrement_cesar("admin", SECRET), profil=Profil.objects.get(code="PRF00000000000000001"))
+u.save()
+
+##################### STATUT DEMANDE ###################
+sd = StatutDemande(code="STD00000000000000001", modifier_par="DEV", libelle="Initié")
+sd.save()
+
+sd = StatutDemande(code="STD00000000000000003", modifier_par="DEV", libelle="Aboutit")
+sd.save()

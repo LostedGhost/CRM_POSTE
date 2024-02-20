@@ -65,12 +65,24 @@
                                 <input type="date" name="date_naissance" class="form-control" id="inputDateNaissance" placeholder="JJ/MM/AAAA" required max="{{max_date}}">
                             </div>
                         </div>
+
+                        <div class="col-md-6 mx-auto">
+                            <label class="col-sm-12 col-form-label">Agence *</label>
+                            <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-building' ></i></span>
+                                <select name="agence" id="inputSite" class="form-control single-select" required>
+                                    <option value="">Sélectionnez une agence</option>
+                                    {%for agence in agences%}
+                                    <option value="{{agence.code}}">{{agence.intitule}}</option>
+                                    {%endfor%}
+                                </select>
+                            </div>
+                        </div>
                         
                         <div class="form-group text-center">
                             <button class="btn btn-blue-s mr-2" type="submit" id="enregistrer" 
                             > Enregistrer
                             </button >
-                            <a href="list" class="btn btn-light border" type="button" id="fermer">Fermer
+                            <a href="/agents/list" class="btn btn-light border" type="button" id="fermer">Fermer
                             </a>
                         </div>
                 </form>

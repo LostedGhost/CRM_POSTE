@@ -12,6 +12,7 @@
 	<link href="{% static 'assets-admin/plugins/simplebar/css/simplebar.css' %}" rel="stylesheet" />
 	<link href="{% static 'assets-admin/plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}" rel="stylesheet" />
 	<link href="{% static 'assets-admin/plugins/metismenu/css/metisMenu.min.css' %}" rel="stylesheet" />
+	<link href="{% static 'assets-admin/plugins/Drag-And-Drop/dist/imageuploadify.min.css' %}" rel="stylesheet" />
 	<!-- loader-->
 	<link href="{% static 'assets-admin/css/pace.min.css' %}" rel="stylesheet" />
 	<script src="{% static 'assets-admin/js/pace.min.js' %}"></script>
@@ -92,6 +93,48 @@
 						</li>
 					</ul>
 				</li>
+
+				<li>
+					<a class="has-arrow" href="javascript:;">
+						<div class="parent-icon"><i class="bx bx-cabinet"></i>
+						</div>
+						<div class="menu-title">Entités</div>
+					</a>
+					<ul>
+                        <li> <a href="/entite/list"><i class="bx bx-list-ul"></i>Liste</a>
+						</li>
+                        <li> <a href="/entite/add"><i class="bx bx-plus"></i>Ajout d'entités</a>
+						</li>
+					</ul>
+				</li>
+
+				<li>
+					<a class="has-arrow" href="javascript:;">
+						<div class="parent-icon"><i class="bx bx-slider-alt"></i>
+						</div>
+						<div class="menu-title">Structures</div>
+					</a>
+					<ul>
+                        <li> <a href="/structure/list"><i class="bx bx-list-ul"></i>Liste</a>
+						</li>
+                        <li> <a href="/structure/add"><i class="bx bx-plus"></i>Ajout de structures</a>
+						</li>
+					</ul>
+				</li>
+
+				<li>
+					<a class="has-arrow" href="javascript:;">
+						<div class="parent-icon"><i class="bx bx-paper-plane"></i>
+						</div>
+						<div class="menu-title">Services</div>
+					</a>
+					<ul>
+                        <li> <a href="/service/list"><i class="bx bx-list-ul"></i>Liste</a>
+						</li>
+                        <li> <a href="/service/add"><i class="bx bx-plus"></i>Ajout de services</a>
+						</li>
+					</ul>
+				</li>
 			</ul>
             {%else%}
             <ul class="metismenu" id="menu">
@@ -111,12 +154,12 @@
 					<a class="has-arrow" href="javascript:;">
 						<div class="parent-icon"><i class="bx bx-barcode-reader"></i>
 						</div>
-						<div class="menu-title">Tickets</div>
+						<div class="menu-title">Demande</div>
 					</a>
 					<ul>
-                        <li> <a href="/tickets/list"><i class="bx bx-list-ol"></i>Liste</a>
+                        <li> <a href="/demande/list"><i class="bx bx-list-ol"></i>Liste</a>
 						</li>
-                        <li> <a href="/tickets/add"><i class="bx bx-plus"></i>Ajout</a>
+                        <li> <a href="/demande/add"><i class="bx bx-plus"></i>Ajout</a>
 						</li>
 					</ul>
 				</li>
@@ -449,14 +492,14 @@
 					</div>
 					<div class="user-box dropdown">
 						<a class="d-flex align-items-center nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							<img src="{% static 'assets-admin/images/avatars/avatar-4.png' %}" class="user-img" alt="user avatar">
+							<img src="{%if utilisateur.photo %}{{ utilisateur.photo.url }}{% else %}{% static 'assets-admin/images/icons/user.png' %}{%endif%}" class="user-img" alt="user avatar">
 							<div class="user-info ps-3">
 								<p class="user-name mb-0">{{utilisateur.prenom}} {{utilisateur.nom}}</p>
 								<p class="designattion mb-0 text-end">{{utilisateur.profil.libelle}}</p>
 							</div>
 						</a>
 						<ul class="dropdown-menu dropdown-menu-end">
-							<li><a class="dropdown-item" href="#"><i class="bx bx-user"></i><span>Profile</span></a>
+							<li><a class="dropdown-item" href="/profil"><i class="bx bx-user"></i><span>Profile</span></a>
 							</li>
 							<li>
 								<div class="dropdown-divider mb-0"></div>
@@ -518,6 +561,7 @@
     <script src="{% static 'assets-admin/plugins/datatable/js/jquery.dataTables.min.js' %}"></script>
 	<script src="{% static 'assets-admin/plugins/datatable/js/dataTables.bootstrap5.min.js' %}"></script>
 	<script src="{% static 'assets-admin/plugins/select2/js/select2.min.js' %}"></script>
+	<script src="{% static 'assets-admin/plugins/Drag-And-Drop/dist/imageuploadify.min.js' %}"></script>
 	<script>
 		$('.single-select').select2({
 			theme: 'bootstrap4',
@@ -547,6 +591,11 @@
 				}
 			});
 		});
+	</script>
+	<script>
+		$(document).ready(function () {
+			$('#image-uploadify').imageuploadify();
+		})
 	</script>
     <script src="{% static 'assets-admin/js/app.js' %}"></script>
 </body>
