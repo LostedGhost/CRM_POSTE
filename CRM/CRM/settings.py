@@ -104,7 +104,7 @@ WSGI_APPLICATION = 'CRM.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'DATABASES/crm.db',
+        'NAME': BASE_DIR / 'DATABASES/crm_poste.db',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',

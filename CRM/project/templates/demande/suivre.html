@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Suivi de demande {% endblock %}
+
+{% block body %}
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>suivi de demande</h6>
+
+<div class="div-center">
+    <div class="card-body">
+        <div class="border p-4 rounded">
+                            
+            <form id="form" name="myform" method="POST"  
+                class="form-horizontal bg-form row g-3" name="NEW">
+                {% csrf_token %}
+                <div class="card-title d-flex align-items-center">
+                    <div>
+                        <i class="bx bx-upvote me-1 font-22 text-blue-sewar"></i>
+                    </div>
+                    <h5 class="mb-0 text-blue-sewar text-uppercase">mise à jour du statut de la demande</h5>
+                </div>
+                <hr />
+                {%for statut in statuts%}
+                    {%if demande.statut.id >= statut.id %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="statut" id="statut{{statut.id}}" checked disabled value="{{statut.id}}">
+                        <label class="form-check-label" for="flexRadioDisabled">{{statut.libelle}}</label>
+                    </div>
+                    {%else%}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="statut" id="statut{{statut.id}}" value="{{statut.id}}">
+                        <label class="form-check-label" for="flexRadioDisabled">{{statut.libelle}}</label>
+                    </div>
+                    {%endif%}
+                {%endfor%}
+                <div>
+                    <ul class="nav nav-pills nav-pills-warning mb-3" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" data-bs-toggle="pill" href="#pas-frais-supp" role="tab" aria-selected="true">
+                                <div class="d-flex align-items-center">
+                                    <div class="tab-icon">
+                                    </div>
+                                    <div class="tab-title">Pas de frais supplémentaires</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" data-bs-toggle="pill" href="#frais-supp" role="tab" aria-selected="false">
+                                <div class="d-flex align-items-center">
+                                    <div class="tab-icon">
+                                    </div>
+                                    <div class="tab-title">Frais supplémentaires</div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="pas-frais-supp" role="tabpanel">
+                            
+                        </div>
+                        <div class="tab-pane fade" id="frais-supp" role="tabpanel">
+                            {%if options_sup.count == 0%}
+                            Pas d'options supplémentaires
+                            {%else%}
+                            {%for option in options_sup%}
+                            <div class="col-md-6 mb-3">
+                                <label class="col-sm-12 col-form-label">{{option.libelle_rep}} *</label>
+                                <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-scan' ></i></span>
+                                    <input type="number" class="form-control" name="nb{{option.id}}" id="inputOptSup{{option.id}}" 
+                                    placeholder="0" min="0"/>
+                                </div>
+                            </div>
+                            {%endfor%}
+                            {%endif%}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8 mb-3">
+                    <label class="col-sm-6 col-form-label text-uppercase">Observations </label>
+                    <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-chat' ></i></span>
+                        <textarea class="form-control" name="observations" id="inputObservations" rows="5" placeholder="Observations"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-group text-center">
+                    <button class="btn btn-blue-s mr-2" type="submit" id="enregistrer" 
+                    > Enregistrer
+                    </button >
+                    <a href="/demande/list" class="btn btn-light border" type="button" id="fermer">Fermer
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

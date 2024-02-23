@@ -132,10 +132,7 @@ class Service(models.Model):
     structure = models.ForeignKey(Structure, on_delete=models.CASCADE, related_name="structure_service")
     photo = models.ImageField(upload_to="photos/service", blank=True)
     montant = models.FloatField(default=0)
-    nb_scannage = models.IntegerField(default=0)
-    nb_impression = models.IntegerField(default=0)
-    frais_supplementaire = models.FloatField(default=0)
-    raisons_frais_sup = models.CharField(max_length=MAX_LABEL_LENGTH, default="")
+    
 
 class Client(models.Model):
     id = models.AutoField(primary_key=True, auto_created=True)
@@ -151,6 +148,8 @@ class Client(models.Model):
     telephone = models.CharField(max_length=MAX_LABEL_LENGTH)
     email = models.EmailField(max_length=MAX_LABEL_LENGTH)
     adresse = models.CharField(max_length=MAX_LABEL_LENGTH)
+    
+    
 
 class StatutDemande(models.Model):
     id = models.AutoField(primary_key=True, auto_created=True)
@@ -173,3 +172,43 @@ class Demande(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="client_demande")
     agent = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, related_name="agent_demande")
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name="service_demande")
+    statut = models.ForeignKey(StatutDemande, on_delete=models.CASCADE, related_name="statut_demande")
+    observations = models.TextField(default="RAS")
+    
+    def optionsSupplementaires(self):
+        return OptionSupplementaireDemande.objects.filter(demande=self)
+    
+    def optionSup(self, option):
+        return OptionSupplementaireDemande.objects.get(demande=self, libelle=option)
+    
+class OptionSupplementaire(models.Model):
+    id = models.AutoField(primary_key=True, auto_created=True)
+    code = models.CharField(max_length=MAX_CODE_LENGTH)
+    date_creation = models.DateField(auto_now_add=True)
+    date_cessation = models.DateField(default=INFINITY_DATE)
+    modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
+    is_deleted = models.BooleanField(default=False)
+
+    libelle = models.CharField(max_length=MAX_LABEL_LENGTH)
+    montant = models.IntegerField(default=0)
+    
+    def libelle_rep(self):
+        if self.libelle[0].lower() in "aeuiohy":
+            return f"Nombre d'{self.libelle.lower()} éffectués(es)"
+        else:
+            return f"Nombre de {self.libelle.lower()} éffectués(es)"
+
+class OptionSupplementaireDemande(models.Model):
+    id = models.AutoField(primary_key=True, auto_created=True)
+    code = models.CharField(max_length=MAX_CODE_LENGTH)
+    date_creation = models.DateField(auto_now_add=True)
+    date_cessation = models.DateField(default=INFINITY_DATE)
+    modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
+    is_deleted = models.BooleanField(default=False)
+    
+    demande = models.ForeignKey(Demande, on_delete=models.CASCADE, related_name="demande_option_supplementaire")
+    option_supplementaire = models.ForeignKey(OptionSupplementaire, on_delete=models.CASCADE, related_name="option_supplementaire_demande")
+    nombre = models.IntegerField(default=0)
+    
+    def montantOpt(self):
+        return self.option_supplementaire.montant * self.nombre

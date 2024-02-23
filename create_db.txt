@@ -334,7 +334,6 @@ v = Ville(code="VIL00083", modifier_par="DEV", intitule="ZOUNGOU")
 v.save()
 
 
-
 ##################### PROFIL ########################
 p = Profil(code="PRF00000000000000001", modifier_par="DEV", libelle="ADMIN")
 p.save()
@@ -342,8 +341,11 @@ p.save()
 p = Profil(code="PRF00000000000000002", modifier_par="DEV", libelle="AGENT")
 p.save()
 
+p = Profil(code="PRF00000000000000003", modifier_par="DEV", libelle="CHEF AGENCE")
+p.save()
+
 ##################### UTILISATEUR ###################
-u = Utilisateur(code="UTL00000000000000001", modifier_par="DEV", nom="TOPANOU", prenom="Ludel", email="topanoulucio@gmail.com", telephone="61012344", adresse="Cotonou", login="Lucio", password=chiffrement_cesar("0000000000000000", SECRET), profil=Profil.objects.get(code="PRF00000000000000001"))
+u = Utilisateur(code="UTL00000000000000001", modifier_par="DEV", nom="TOPANOU", prenom="Ludel", email="topanoulucio@gmail.com", telephone="61012344", adresse="Cotonou", login="Lucio", password=chiffrement_cesar("0000", SECRET), profil=Profil.objects.get(code="PRF00000000000000001"))
 u.save()
 
 u = Utilisateur(code="UTL00000000000000002", modifier_par="DEV", nom="AZERTY", prenom="Test", email="testmail@gmail.com", telephone="21000000000000000000", adresse="Cotonou", login="aa", password=chiffrement_cesar("aa", SECRET), profil=Profil.objects.get(code="PRF00000000000000002"))
@@ -353,8 +355,17 @@ u = Utilisateur(code="UTL00000000000000003", modifier_par="DEV", nom="NAME", pre
 u.save()
 
 ##################### STATUT DEMANDE ###################
-sd = StatutDemande(code="STD00000000000000001", modifier_par="DEV", libelle="Initié")
+sd = StatutDemande(code="STD00000000000000001", modifier_par="DEV", libelle="INITIE")
 sd.save()
 
-sd = StatutDemande(code="STD00000000000000003", modifier_par="DEV", libelle="Aboutit")
+sd = StatutDemande(code="STD00000000000000002", modifier_par="DEV", libelle="EN ATTENTE")
+sd.save()
+
+sd = StatutDemande(code="STD00000000000000003", modifier_par="DEV", libelle="DIFFERE")
+sd.save()
+
+sd = StatutDemande(code="STD00000000000000004", modifier_par="DEV", libelle="NON ABOUTIT")
+sd.save()
+
+sd = StatutDemande(code="STD00000000000000005", modifier_par="DEV", libelle="ABOUTIT")
 sd.save()

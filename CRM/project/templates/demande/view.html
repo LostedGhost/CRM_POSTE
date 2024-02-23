@@ -1,13 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %} Liste des demandes clients {% endblock %}
+{% block title %} Liste des demandes formulées par autrui {% endblock %}
 
 {% block body %}
-<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>LISTE DES DEMANDES</h6>
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>LISTE DES DEMANDES formulées par autrui</h6>
 
 				
-				<a class="btn btn-blue-s my-3 px-3 py-2" href="/demande/add"><i class="lni lni-plus mr-2" style="font-size: 10px !important;"></i> Ajouter </a>
-
 				<div class="card">
 					<div class="card-body">
 						<div class="table-responsive">
@@ -24,7 +22,7 @@
 									</tr>
 								</thead>
 								<tbody>
-                                    {% for demande in demandes %}
+                                    {%if demande %}
                                     <tr>
 										<td hidden>{{demande.id}}</td>
                                         <td>{{demande.code}}</td>
@@ -88,11 +86,15 @@
 												</div>
 											</div>
                                         </td>
-                                    </tr>
-                                    {% endfor %}
+                                    </tr>  
+                                    {%endif%} 
                                 </tbody>
 							</table>
 						</div>
+                        <div class="form-group text-center">
+                            <a href="/demande/other" class="btn btn-light border" type="button" id="fermer">Fermer
+                            </a>
+                        </div>
 					</div>
 				</div>
 {% endblock %}

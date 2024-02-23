@@ -13,6 +13,7 @@
 	<link href="{% static 'assets-admin/plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}" rel="stylesheet" />
 	<link href="{% static 'assets-admin/plugins/metismenu/css/metisMenu.min.css' %}" rel="stylesheet" />
 	<link href="{% static 'assets-admin/plugins/Drag-And-Drop/dist/imageuploadify.min.css' %}" rel="stylesheet" />
+	<link href="{% static 'assets-admin/plugins/input-tags/css/tagsinput.css' %}" rel="stylesheet" />
 	<!-- loader-->
 	<link href="{% static 'assets-admin/css/pace.min.css' %}" rel="stylesheet" />
 	<script src="{% static 'assets-admin/js/pace.min.js' %}"></script>
@@ -62,76 +63,98 @@
 						</li>
 					</ul>
 				</li>
-				<li class="menu-label">Administration</li>
                 
 				<li>
-					<a class="has-arrow" href="javascript:;">
-						<div class="parent-icon"><i class="bx bx-buildings"></i>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class="bx bx-anchor"></i>
 						</div>
-						<div class="menu-title">Agence</div>
+						<div class="menu-title">Administration</div>
 					</a>
 					<ul>
-                        <li> <a href="/agence/list"><i class="bx bx-list-ol"></i>Liste</a>
+						<li>
+							<a class="has-arrow" href="javascript:;">
+								<div class="parent-icon"><i class="bx bx-buildings"></i>
+								</div>
+								<div class="menu-title">Agence</div>
+							</a>
+							<ul>
+								<li> <a href="/agence/list"><i class="bx bx-list-ol"></i>Liste</a>
+								</li>
+								<li> <a href="/agence/add"><i class="bx bx-plus"></i>Ajout</a>
+								</li>
+							</ul>
 						</li>
-                        <li> <a href="/agence/add"><i class="bx bx-plus"></i>Ajout</a>
+		
+						<li>
+							<a class="has-arrow" href="javascript:;">
+								<div class="parent-icon"><i class="bx bx-user-circle"></i>
+								</div>
+								<div class="menu-title">Agents</div>
+							</a>
+							<ul>
+								<li> <a href="/agents/list"><i class="bx bx-list-ul"></i>Liste</a>
+								</li>
+								<li> <a href="/agents/add"><i class="bx bx-user-plus"></i>Ajout d'agent</a>
+								</li>
+								<li> <a href="/agents/addMany"><i class="bx bx-user-plus"></i>Chargement d'agents</a>
+								</li>
+							</ul>
 						</li>
-					</ul>
-				</li>
-
-				<li>
-					<a class="has-arrow" href="javascript:;">
-						<div class="parent-icon"><i class="bx bx-user-circle"></i>
-						</div>
-						<div class="menu-title">Agents</div>
-					</a>
-					<ul>
-                        <li> <a href="/agents/list"><i class="bx bx-list-ul"></i>Liste</a>
+		
+						<li>
+							<a class="has-arrow" href="javascript:;">
+								<div class="parent-icon"><i class="bx bx-cabinet"></i>
+								</div>
+								<div class="menu-title">Entités</div>
+							</a>
+							<ul>
+								<li> <a href="/entite/list"><i class="bx bx-list-ul"></i>Liste</a>
+								</li>
+								<li> <a href="/entite/add"><i class="bx bx-plus"></i>Ajout d'entités</a>
+								</li>
+							</ul>
 						</li>
-                        <li> <a href="/agents/add"><i class="bx bx-user-plus"></i>Ajout d'agent</a>
+		
+						<li>
+							<a class="has-arrow" href="javascript:;">
+								<div class="parent-icon"><i class="bx bx-slider-alt"></i>
+								</div>
+								<div class="menu-title">Structures</div>
+							</a>
+							<ul>
+								<li> <a href="/structure/list"><i class="bx bx-list-ul"></i>Liste</a>
+								</li>
+								<li> <a href="/structure/add"><i class="bx bx-plus"></i>Ajout de structures</a>
+								</li>
+							</ul>
 						</li>
-                        <li> <a href="/agents/addMany"><i class="bx bx-user-plus"></i>Chargement d'agents</a>
+		
+						<li>
+							<a class="has-arrow" href="javascript:;">
+								<div class="parent-icon"><i class="bx bx-paper-plane"></i>
+								</div>
+								<div class="menu-title">Services</div>
+							</a>
+							<ul>
+								<li> <a href="/service/list"><i class="bx bx-list-ul"></i>Liste</a>
+								</li>
+								<li> <a href="/service/add"><i class="bx bx-plus"></i>Ajout de services</a>
+								</li>
+							</ul>
 						</li>
-					</ul>
-				</li>
-
-				<li>
-					<a class="has-arrow" href="javascript:;">
-						<div class="parent-icon"><i class="bx bx-cabinet"></i>
-						</div>
-						<div class="menu-title">Entités</div>
-					</a>
-					<ul>
-                        <li> <a href="/entite/list"><i class="bx bx-list-ul"></i>Liste</a>
-						</li>
-                        <li> <a href="/entite/add"><i class="bx bx-plus"></i>Ajout d'entités</a>
-						</li>
-					</ul>
-				</li>
-
-				<li>
-					<a class="has-arrow" href="javascript:;">
-						<div class="parent-icon"><i class="bx bx-slider-alt"></i>
-						</div>
-						<div class="menu-title">Structures</div>
-					</a>
-					<ul>
-                        <li> <a href="/structure/list"><i class="bx bx-list-ul"></i>Liste</a>
-						</li>
-                        <li> <a href="/structure/add"><i class="bx bx-plus"></i>Ajout de structures</a>
-						</li>
-					</ul>
-				</li>
-
-				<li>
-					<a class="has-arrow" href="javascript:;">
-						<div class="parent-icon"><i class="bx bx-paper-plane"></i>
-						</div>
-						<div class="menu-title">Services</div>
-					</a>
-					<ul>
-                        <li> <a href="/service/list"><i class="bx bx-list-ul"></i>Liste</a>
-						</li>
-                        <li> <a href="/service/add"><i class="bx bx-plus"></i>Ajout de services</a>
+		
+						<li>
+							<a class="has-arrow" href="javascript:;">
+								<div class="parent-icon"><i class="bx bx-slider"></i>
+								</div>
+								<div class="menu-title">Options Supplémentaires</div>
+							</a>
+							<ul>
+								<li> <a href="/option/list"><i class="bx bx-list-ul"></i>Liste</a>
+								</li>
+								<li> <a href="/option/add"><i class="bx bx-plus"></i>Ajout d'options</a>
+								</li>
+							</ul>
 						</li>
 					</ul>
 				</li>
@@ -160,6 +183,11 @@
                         <li> <a href="/demande/list"><i class="bx bx-list-ol"></i>Liste</a>
 						</li>
                         <li> <a href="/demande/add"><i class="bx bx-plus"></i>Ajout</a>
+						</li>
+						<li>
+							<a href="/demande/other">
+								<i class="bx bx-search"></i> Recherche
+							</a>
 						</li>
 					</ul>
 				</li>
@@ -562,6 +590,7 @@
 	<script src="{% static 'assets-admin/plugins/datatable/js/dataTables.bootstrap5.min.js' %}"></script>
 	<script src="{% static 'assets-admin/plugins/select2/js/select2.min.js' %}"></script>
 	<script src="{% static 'assets-admin/plugins/Drag-And-Drop/dist/imageuploadify.min.js' %}"></script>
+	<script src="{% static 'assets-admin/plugins/input-tags/js/tagsinput.js' %}"></script>
 	<script>
 		$('.single-select').select2({
 			theme: 'bootstrap4',

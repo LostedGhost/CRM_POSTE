@@ -2674,3 +2674,7 @@ input.search-control-2::placeholder {
 thead{
 	background-color: rgba(6, 2, 17, 0.177);
 }
+
+.text-overflow{
+	overflow-wrap : break-word;
+}
