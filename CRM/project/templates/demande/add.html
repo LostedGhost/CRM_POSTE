@@ -285,4 +285,29 @@
         </div>
     </div>
 </div>
+<script>
+    $("#enregistrerOld").on("click", function(e){
+        e.preventDefault();
+        var form = document.getElementById('formOld');
+        var recap = "<p>";
+        for (var i = 0; i < form.elements.length; i++) {
+          var element = form.elements[i];
+          if (element.type !== "submit" && element.name !== "csrfmiddlewaretoken") {
+            if (element.tagName === "SELECT") {
+              var selectedIndex = element.selectedIndex;
+              if (selectedIndex !== -1) {
+                value = element.options[selectedIndex].text;
+              }
+            }
+            else{
+              value = element.value;
+            }
+            recap += "<strong class='text-uppercase'> " + toUser(element.name) + " :</strong> " + value + "</p><br><p>";
+          }
+        }
+        recap += "</p>";
+        document.getElementById("recap").innerHTML = recap;
+        $("#confirmModal").modal("show");
+      });
+</script>
 {% endblock %}

@@ -14,20 +14,18 @@
 							<table id="myDataTable" class="table table-striped table-bordered table-hover my-3">
 								<thead>
 									<tr>
-										<th>Code</th>
+										<th>Date de la dernière modification</th>
                                         <th>Dénomination</th>
 										<th>Site</th>
-										<th>Géolocalisation</th>
 										<th class="text-end">Actions</th>
 									</tr>
 								</thead>
 								<tbody>
                                     {% for agence in agences %}
                                     <tr>
-                                        <td>{{agence.code}}</td>
+										<td>{{agence.date_creation_rep}} </td>
                                         <td>{{agence.intitule}}</td>
                                         <td>{{agence.site}}</td>
-                                        <td>({{agence.geolocalisation_longitude}} ; {{agence.geolocalisation_latitude}})</td>
                                         <td class="text-end">
                                             <a href="edit/{{agence.id}}">
                                             <button data-elt-id=""

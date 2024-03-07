@@ -14,25 +14,23 @@
 							<table id="myDataTable" class="table table-striped table-bordered table-hover my-3">
 								<thead>
 									<tr>
-										<th>Code</th>
+                                        <th>Date de la dernière modification</th>
                                         <th>Login</th>
 										<th>Nom</th>
 										<th>Prenom</th>
-										<th class="text-center">Date de naissance</th>
                                         <th>Agence</th>
-										<th class="">Active ?</th>
-                                        <th>Supprimé ?</th>
+										<th class="text-center">Connecté ?</th>
+                                        <th class="text-center">Désactivé ?</th>
 										<th class="text-end">Actions</th>
 									</tr>
 								</thead>
 								<tbody>
                                     {% for agent in agents %}
                                     <tr>
-                                        <td>{{agent.code}}</td>
+                                        <td>{{agent.date_creation_rep}} </td>
                                         <td>{{agent.login}}</td>
                                         <td>{{agent.nom}}</td>
                                         <td>{{agent.prenom}}</td>
-                                        <td class="text-center">{{agent.date_naissance}}</td>
                                         <td>{{agent.agence.intitule}}</td>
                                         <td class="text-center">
                                             {% if agent.active %}
@@ -42,10 +40,10 @@
                                             {% endif %}
                                         </td>
                                         <td class="text-center">
-                                            {% if agent.is_deleted %}
-                                            <span class="badge bg-danger">Oui</span>
-                                            {% else %}
+                                            {% if agent.can_connect %}
                                             <span class="badge bg-success">Non</span>
+                                            {% else %}
+                                            <span class="badge bg-danger">Oui</span>
                                             {% endif %}
                                         </td>
                                         <td class="text-end">
@@ -56,12 +54,28 @@
 											  <span class="lni lni-reply"></span>
 											</button>
                                             </a>
-                                            <a href="/agents/delete/{{agent.id}}">
-                                                <button class="btn btn-sm btn-danger" type="button"
+                                            <button class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteAgenceLead{{agent.id}}"
 												title="supprimer" >
 												<span class="bx bx-trash"></span>
 											    </button>
-                                            </a>
+
+												<div class="modal fade col-5" id="deleteAgenceLead{{agent.id}}" aria-labelledby="#exampleScrollableModal" tabindex="-1" aria-hidden="true">
+													<div class="modal-dialog modal-dialog-scrollable">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title" id="exampleScrollableModal">Confirmation</h5>
+																<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+															</div>
+															<div class="modal-body text-center">La suppression de cet agent est irréversible.</div>
+															<div class="modal-footer">
+																<a href="/agents/delete/{{agent.id}}">
+																	<button type="button" class="btn btn-danger">Continuer</button>
+																</a>
+																<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+															</div>
+														</div>
+													</div>
+												</div>
                                         </td>
                                     </tr>
                                     {% endfor %}

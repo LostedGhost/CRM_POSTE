@@ -2,39 +2,39 @@ from project.models import *
 
 ##################### VILLE ########################
 # ABOMEY
-v = Ville(code="VIL00000000000000001", modifier_par="DEV", intitule="ABOMEY")
+v = Ville(code="VIL00000000000000000001", modifier_par="DEV", intitule="ABOMEY")
 v.save()
 
 # ABOMEY-CALAVI
-v = Ville(code="VIL00000000000000002", modifier_par="DEV", intitule="ABOMEY-CALAVI")
+v = Ville(code="VIL00000000000000000002", modifier_par="DEV", intitule="ABOMEY-CALAVI")
 v.save()
 
 # AHOUDO
-v = Ville(code="VIL00000000000000003", modifier_par="DEV", intitule="AHOUDO")
+v = Ville(code="VIL00000000000000000003", modifier_par="DEV", intitule="AHOUDO")
 v.save()
 
 # AKPASSI
-v = Ville(code="VIL00000000000000004", modifier_par="DEV", intitule="AKPASSI")
+v = Ville(code="VIL00000000000000000004", modifier_par="DEV", intitule="AKPASSI")
 v.save()
 
 # ALLADA
-v = Ville(code="VIL00000000000000005", modifier_par="DEV", intitule="ALLADA")
+v = Ville(code="VIL00000000000000000005", modifier_par="DEV", intitule="ALLADA")
 v.save()
 
 # ANGOHO
-v = Ville(code="VIL00000000000000006", modifier_par="DEV", intitule="ANGOHO")
+v = Ville(code="VIL00000000000000000006", modifier_par="DEV", intitule="ANGOHO")
 v.save()
 
 # APLOGAN
-v = Ville(code="VIL00000000000000007", modifier_par="DEV", intitule="APLOGAN")
+v = Ville(code="VIL00000000000000000007", modifier_par="DEV", intitule="APLOGAN")
 v.save()
 
 # ATINKANME
-v = Ville(code="VIL00000000000000008", modifier_par="DEV", intitule="ATINKANME")
+v = Ville(code="VIL00000000000000000008", modifier_par="DEV", intitule="ATINKANME")
 v.save()
 
 # ATTIKPO
-v = Ville(code="VIL00000000000000009", modifier_par="DEV", intitule="ATTIKPO")
+v = Ville(code="VIL00000000000000000009", modifier_par="DEV", intitule="ATTIKPO")
 v.save()
 
 # AVOGBO
@@ -335,37 +335,95 @@ v.save()
 
 
 ##################### PROFIL ########################
-p = Profil(code="PRF00000000000000001", modifier_par="DEV", libelle="ADMIN")
+p = Profil(code=generate_code("PRF", Profil.real_number() + 1), modifier_par="DEV", libelle="ADMIN")
 p.save()
 
-p = Profil(code="PRF00000000000000002", modifier_par="DEV", libelle="AGENT")
+p = Profil(code=generate_code("PRF", Profil.real_number() + 1), modifier_par="DEV", libelle="AGENT")
 p.save()
 
-p = Profil(code="PRF00000000000000003", modifier_par="DEV", libelle="CHEF AGENCE")
+p = Profil(code=generate_code("PRF", Profil.real_number() + 1), modifier_par="DEV", libelle="CHEF AGENCE")
 p.save()
 
 ##################### UTILISATEUR ###################
-u = Utilisateur(code="UTL00000000000000001", modifier_par="DEV", nom="TOPANOU", prenom="Ludel", email="topanoulucio@gmail.com", telephone="61012344", adresse="Cotonou", login="Lucio", password=chiffrement_cesar("0000", SECRET), profil=Profil.objects.get(code="PRF00000000000000001"))
+u = Utilisateur(code=generate_code("UTL", Utilisateur.real_number() + 1), modifier_par="DEV", nom="TOPANOU", prenom="Ludel", email="topanoulucio@gmail.com", telephone="61012344", adresse="Cotonou", login="Lucio", password=chiffrement_cesar("0000", SECRET), profil=Profil.objects.get(id=1))
 u.save()
 
-u = Utilisateur(code="UTL00000000000000002", modifier_par="DEV", nom="AZERTY", prenom="Test", email="testmail@gmail.com", telephone="21000000000000000000", adresse="Cotonou", login="aa", password=chiffrement_cesar("aa", SECRET), profil=Profil.objects.get(code="PRF00000000000000002"))
-u.save()
+# u = Utilisateur(code="UTL00000000000000000002", modifier_par="DEV", nom="AZERTY", prenom="Test", email="testmail@gmail.com", telephone="21000000", adresse="Cotonou", login="aa", password=chiffrement_cesar("aa", SECRET), profil=Profil.objects.get(code="PRF00000000000000000002"))
+# u.save()
 
-u = Utilisateur(code="UTL00000000000000003", modifier_par="DEV", nom="NAME", prenom="Surname", email="admincrm@gmail.com", telephone="61000000000000000000", adresse="Cotonou", login="admin", password=chiffrement_cesar("admin", SECRET), profil=Profil.objects.get(code="PRF00000000000000001"))
-u.save()
+# u = Utilisateur(code="UTL00000000000000000003", modifier_par="DEV", nom="NAME", prenom="Surname", email="admincrm@gmail.com", telephone="61001122", adresse="Cotonou", login="admin", password=chiffrement_cesar("admin", SECRET), profil=Profil.objects.get(code="PRF00000000000000000001"))
+# u.save()
 
 ##################### STATUT DEMANDE ###################
-sd = StatutDemande(code="STD00000000000000001", modifier_par="DEV", libelle="INITIE")
+sd = StatutDemande(code=generate_code("STD", StatutDemande.real_number() + 1), modifier_par="DEV", libelle="INITIE")
 sd.save()
 
-sd = StatutDemande(code="STD00000000000000002", modifier_par="DEV", libelle="EN ATTENTE")
+sd = StatutDemande(code=generate_code("STD", StatutDemande.real_number() + 1), modifier_par="DEV", libelle="EN ATTENTE")
 sd.save()
 
-sd = StatutDemande(code="STD00000000000000003", modifier_par="DEV", libelle="DIFFERE")
+sd = StatutDemande(code=generate_code("STD", StatutDemande.real_number() + 1), modifier_par="DEV", libelle="DIFFERE")
 sd.save()
 
-sd = StatutDemande(code="STD00000000000000004", modifier_par="DEV", libelle="NON ABOUTIT")
+sd = StatutDemande(code=generate_code("STD", StatutDemande.real_number() + 1), modifier_par="DEV", libelle="NON ABOUTIT")
 sd.save()
 
-sd = StatutDemande(code="STD00000000000000005", modifier_par="DEV", libelle="ABOUTIT")
+sd = StatutDemande(code=generate_code("STD", StatutDemande.real_number() + 1), modifier_par="DEV", libelle="ABOUTIT")
 sd.save()
+
+##################### ENTITE ###################
+e = Entite(code=generate_code("STD", Entite.real_number() + 1), denomination="ANIP", modifier_par="DEV")
+e.save()
+
+##################### STRUCTURE ###################
+s = Structure(code=generate_code("STD", Entite.real_number() + 1), denomination="RAVIP", entite=Entite.objects.filter(date_cessation=INFINITY_DATE).get(denomination="ANIP"), modifier_par="DEV")
+s.save()
+
+##################### SERVICE ###################
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule="Mise à jour du numéro", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule="Duplicata Ravip", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule="Acte de naissance sécurisé", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule="Acte de naissance sécurisé avec mention Marginal", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule="Certificat coutume & Célibat", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule="Certificat de Résidence", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule="CIP", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule="Recherche de NPI ou carte c'est moi", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule="Recherche de NPI+ mise à jour", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule="IFU", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule="Correction du nom ; prénom ou lieu de naissance", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule="Correction de date de naissance", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule="Registre de commerce", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule="Certificat de nationalité sans vous déplacer", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule="Casier judiciaire", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+
+sv = Service(code=generate_code("SRV", Service.real_number() + 1), intitule=" Payement en ligne dans des impôts ou toute autres Payement dans le compte du Trésor", montant=0, couleur=Service.generate_color(), modifier_par="DEV", structure=Structure.objects.get(denomination="RAVIP"))
+sv.save()
+

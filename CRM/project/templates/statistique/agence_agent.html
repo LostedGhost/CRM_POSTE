@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Liste des demandes formulées par autrui {% endblock %}
+
+{% block body %}
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>LISTE DES DEMANDES formulées par autrui</h6>
+
+				
+				<div class="card">
+					<div class="card-body">
+                        <div class="col">
+                            <h6 class="mb-0 text-uppercase">Sollicitation des services</h6>
+                            <hr/>
+                            <div class="card mx-auto">
+                                <div class="card-body">
+                                    <div id="stat1"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <select name="choix" id="choixDomaineStat" class="form-control single-select" required>
+                            <option value="">Sélectionnez une option pour l'affichage des statistiques</option>
+                            <option value="form1">Par agence</option>
+                            <option value="form2">Par agent</option>
+                        </select>
+                        
+                        <form id="form1" name="myform" method="POST" hidden 
+                                class="form-horizontal bg-form row g-3 mb-3" name="NEW">
+                                {% csrf_token %}
+                                <div class="card-title d-flex align-items-center">
+                                    <div>
+                                        <i class="bx bx-search  me-1 font-22 text-blue-sewar"></i>
+                                    </div>
+                                    <h5 class="mb-0 text-blue-sewar text-uppercase">historique par agence</h5>
+                                </div>
+                                <hr />
+                                <div class="col-md-6 mx-auto">
+                                    <label class="col-sm-12 col-form-label">Agence *</label>
+                                    <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-building' ></i></span>
+                                        <select name="agence" id="inputAgence" class="form-control single-select" required>
+                                            <option value="">Sélectionnez une agence</option>
+                                            {%for agence in agences%}
+                                            <option value="{{agence.code}}">{{agence.intitule}}</option>
+                                            {%endfor%}
+                                        </select>
+                                        <button class=" btn" type="submit" id="enregistrer1" 
+                                        > <span class=""><i class='bx bx-search' ></i></span>
+                                        </button >
+                                        
+                                    </div>
+                                </div>
+
+                        </form>
+                        <form id="form2" name="myform" method="POST" hidden 
+                                class="form-horizontal bg-form row g-3 mb-3" name="NEW">
+                                {% csrf_token %}
+                                <div class="card-title d-flex align-items-center">
+                                    <div>
+                                        <i class="bx bx-search  me-1 font-22 text-blue-sewar"></i>
+                                    </div>
+                                    <h5 class="mb-0 text-blue-sewar text-uppercase">historique par agent</h5>
+                                </div>
+                                <hr />
+                                <div class="col-md-6 mx-auto">
+                                    <label class="col-sm-12 col-form-label">Agent *</label>
+                                    <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-user' ></i></span>
+                                        <select name="agent" id="inputSite" class="form-control single-select" required>
+                                            <option value="">Sélectionnez un agent</option>
+                                            {%for agent in agents%}
+                                            <option value="{{agent.code}}">{{agent.agence.intitule}} - {{agent.nom}} {{agent.prenom}} </option>
+                                            {%endfor%}
+                                        </select>
+                                        <button class=" btn" type="submit" id="enregistrer" 
+                                        > <span class=""><i class='bx bx-search' ></i></span>
+                                        </button >
+                                        
+                                    </div>
+                                </div>
+
+                        </form>
+					</div>
+				</div>
+{% endblock %}

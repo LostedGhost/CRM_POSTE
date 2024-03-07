@@ -1,43 +1,91 @@
-from django.shortcuts import render
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
+
 import openpyxl
 from CRM.settings import BASE_DIR
 from .models import *
 
-# Create your views here.
 
-def index(request):
+
+# Create your views here.
+def handle404(request, exception):
     user_identifiant = request.session.get('user')
     error = request.session.get('error')
     if user_identifiant is None:
         return redirect("/login")
     user = Utilisateur.objects.get(id=user_identifiant)
+    return render(request, 'error/404.html', {'utilisateur': user, 'error': error})
+
+def handle500(request):
+    return render(request, 'error/500.html')
+
+def index(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.get(id=user_identifiant)
+    print(INFINITY_DATE)
+    """ 
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(code=user.code)
+    request.session['user'] = user.id """
     nb_agents = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).filter(profil__libelle="AGENT").count()
-    nb_agents_active = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).filter(profil__libelle="AGENT").filter(is_active=True).count()
+    nb_agents_active = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).filter(profil__id=2).filter(is_active=True).count()
     nb_demandes = Demande.objects.filter(date_cessation=INFINITY_DATE).count()
-    nb_demandes_abouties = Demande.objects.filter(date_cessation=INFINITY_DATE).filter(statut=StatutDemande.objects.filter(date_cessation=INFINITY_DATE).get(libelle="ABOUTIE")).count()
+    nb_demandes_abouties = Demande.objects.filter(date_cessation=INFINITY_DATE).filter(statut__id=5).count()
+    nb_demandes_non_abouties = Demande.objects.filter(date_cessation=INFINITY_DATE).filter(statut__id=4).count()
+    nb_demandes_inities_ou_en_cours = Demande.objects.filter(date_cessation=INFINITY_DATE).filter(statut__id=1).count() + Demande.objects.filter(date_cessation=INFINITY_DATE).filter(statut__id=2).count()
+    services = Service.objects.filter(date_cessation=INFINITY_DATE)
+    valeurs = [service.sollicitation_count() for service in services]
+    couleurs = [service.couleur for service in services]
+    noms = [service.intitule for service in services]
+    donnees = {"valeurs":valeurs, "couleurs":couleurs, "noms":noms}
+    demandes = Demande.objects.filter(date_cessation=INFINITY_DATE)
+    agences = Agence.objects.filter(date_cessation=INFINITY_DATE)
+    if user.profil.id == 2:
+        valeurs = user.sollicitation()
+        services = Service.objects.filter(date_cessation=INFINITY_DATE)
+        couleurs = [service.couleur for service in services]
+        noms = [service.intitule for service in services]
+        donnees = {"valeurs":valeurs, "couleurs":couleurs, "noms":noms}
+    
+    if user.profil.id == 3:
+        valeurs = user.sollicitation_agence()
+        services = Service.objects.filter(date_cessation=INFINITY_DATE)
+        couleurs = [service.couleur for service in services]
+        noms = [service.intitule for service in services]
+        donnees = {"valeurs":valeurs, "couleurs":couleurs, "noms":noms}
+    
+    
     return render(request, 'index.html', 
                   {"utilisateur": user,
                    "error": error,
+                   "success":success,
                    "nb_agents": nb_agents,
                    "nb_agents_active": nb_agents_active,
                    "nb_demandes":nb_demandes,
                    "nb_demandes_abouties":nb_demandes_abouties,
+                   "nb_demandes_non_abouties":nb_demandes_non_abouties,
+                   "nb_demandes_inities_ou_en_cours":nb_demandes_inities_ou_en_cours,
+                   "donnees":donnees,
+                   "demandes":demandes,
                    }
                   )
 
 def login(request):
     user_identifiant = request.session.get('user')
-    error = request.session.get('error')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
     if user_identifiant is not None:
         return redirect("/")
     if request.POST:
         login = request.POST['login']
         password = request.POST['password']
         try:
-            user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(login=login, password=chiffrement_cesar(password, SECRET))
+            user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(login=login, password=chiffrement_cesar(password, SECRET), can_connect=True)
         except:
             request.session['error'] = 'Login ou mot de passe incorrect'
+            return redirect("/login")
         request.session['user'] = user.id
         user.is_active = True
         user.save()
@@ -55,7 +103,9 @@ def logout(request):
 
 def profile(request):
     user_identifiant = request.session.get('user')
+    print(user_identifiant)
     error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
     if user_identifiant is None:
         return redirect("/login")
     user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
@@ -65,25 +115,162 @@ def profile(request):
         email = request.POST.get('email')
         telephone = request.POST.get('telephone')
         adresse = request.POST.get('adresse')
-        date_naissance = request.POST.get('date_naissance')
         photo = request.FILES.get('photo')
         if photo == None:
             photo = user.photo
         password = request.POST.get('password')
         
-        u = Utilisateur(photo=photo, code=user.code,nom=nom, prenom=prenom, agence=user.agence, date_naissance=date_naissance, telephone=telephone, email=email, adresse=adresse, login=user.login, password=chiffrement_cesar(password, SECRET), profil=user.profil,modifier_par=user.code)
+        u = Utilisateur(photo=photo, code=user.code,nom=nom, prenom=prenom, agence=user.agence, telephone=telephone, email=email, adresse=adresse, login=user.login, password=chiffrement_cesar(password, SECRET), profil=user.profil,modifier_par=user.code)
         u.save()
         
         user.date_cessation = datetime.now()
         user.modifier_par = user.code
         user.save()
         request.session["user"] = u.id
+        request.session["success"] = "Profil modifié avec succès"
         return redirect("/profil")
     return render(request, 'agents/profil.html',
                   {"utilisateur": user,
                    "error": error,
+                   "success":success,
                    }
                   )
+def liste_agence_leader(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    agents = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).filter(profil=Profil.objects.get(id=3))
+    return render(request, 'agence-lead/list.html',
+                  {"utilisateur": user,
+                   "error":error,
+                   "success":success,
+                   "agents": agents,
+                   }
+                  )
+
+def ajout_agence_leader(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    max_date = datetime.now() - timedelta(days=18*365)
+    agences = Agence.objects.filter(date_cessation=INFINITY_DATE)
+    if request.POST:
+        nom = request.POST['nom']
+        prenom = request.POST['prenom']
+        email = request.POST['email']
+        telephone = request.POST['telephone']
+        adresse = request.POST['adresse']
+        agence = Agence.objects.filter(date_cessation=INFINITY_DATE).get(code=request.POST['agence'])
+        profil = Profil.objects.get(id=3)
+        login = request.POST['login']
+        password = generate_strong_password()
+        code = generate_code("UTL", Utilisateur.real_number()+1)
+        modifier_par = user.code
+        try:
+            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(login=login)
+            request.session['error'] = 'Le login doit être unique.'
+            return redirect("/agence-leader/list")
+        except:
+            pass
+        try:
+            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).filter(profil=profil).get(agence=agence)
+            request.session['error'] = 'Il ne peut y avoir plusieurs chefs pour une même agence.'
+            return redirect("/agence-leader/list")
+        except:
+            pass
+        try:
+            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(nom=nom, prenom=prenom)
+            request.session['error'] = 'Un utilisateur ayant le même nom et le même prénom existe déjà.'
+            return redirect("/agence-leader/list")
+        except:
+            pass
+        try:
+            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(email=email)
+            request.session['error'] = 'Email déjà utilisé'
+            return redirect("/agence-leader/list")
+        except:
+            pass
+        try:
+            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(telephone=telephone)
+            request.session['error'] = 'Telephone déjà utilisé'
+            return redirect("/agence-leader/list")
+        except:
+            pass
+        try:
+            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(date_naissance__gt=max_date)
+            request.session['error'] = 'Date invalide'
+            return redirect("/agence-leader/list")
+        except:
+            pass
+        u = Utilisateur(code=code,nom=nom, prenom=prenom, agence=agence, telephone=telephone, email=email, adresse=adresse, login=login, password=chiffrement_cesar(password, SECRET), profil=profil,modifier_par=modifier_par)
+        u.save()
+        request.session["success"] = "Chef d'agence ajouté avec succès"
+        return redirect("/agence-leader/list")
+    return render(request, 'agence-lead/add.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+        "max_date":max_date.strftime("%Y-%m-%d"),
+        "agences":agences,
+    })
+
+def edit_agence_leader(request, lead_id):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    lead = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=lead_id)
+    agences = Agence.objects.filter(date_cessation=INFINITY_DATE)
+    if request.POST:
+        regeneratePass = bool(request.POST.get('regeneratePass', False))
+        agence = Agence.objects.filter(date_cessation=INFINITY_DATE).get(code=request.POST['agence'])
+        if regeneratePass:
+            password = generate_strong_password()
+        else:
+            password = lead.true_pass()
+        lead.date_cessation = datetime.now()
+        lead.save()
+        try:
+            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(agence=agence)
+            request.session['error'] = 'Il ne peut y avoir plusieurs chefs pour une même agence.'
+        except:
+            pass
+        u = Utilisateur(code=lead.code,nom=lead.nom, prenom=lead.prenom, agence=agence, telephone=lead.telephone, email=lead.email, adresse=lead.adresse, login=lead.login, password=chiffrement_cesar(password, SECRET), profil=lead.profil,modifier_par=user.code)
+        u.save()
+        lead.date_cessation = datetime.now()
+        lead.modifier_par = user.code
+        lead.save()
+        request.session['success'] = f"Réaffectation effectuée avec succès"
+        
+        return redirect("/agence-leader/list")
+    return render(request, 'agence-lead/edit.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+        "agent":lead,
+        "agences":agences,
+    })
+
+def delete_agence_leader(request, lead_id):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    lead = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=lead_id)
+    lead.date_cessation = datetime.now()
+    lead.save()
+    request.session['success'] = "Chef d'agence supprimé avec succès"
+    return redirect("/agence-leader/list")
 
 def liste_agent(request):
     user_identifiant = request.session.get('user')
@@ -108,21 +295,26 @@ def ajout_agent(request):
     max_date = datetime.now() - timedelta(days=18*365)
     agences = Agence.objects.filter(date_cessation=INFINITY_DATE)
     if request.POST:
+        login = request.POST['login']
         nom = request.POST['nom']
         prenom = request.POST['prenom']
-        date_naissance = request.POST['date_naissance']
         email = request.POST['email']
         telephone = request.POST['telephone']
         adresse = request.POST['adresse']
         agence = Agence.objects.filter(date_cessation=INFINITY_DATE).get(code=request.POST['agence'])
         profil = Profil.objects.get(libelle="AGENT")
-        login = Utilisateur.generate_login()
-        password = Utilisateur.generate_password()
-        code = generate_code("UTL", Utilisateur.objects.count()+1)
+        password = generate_strong_password()
+        code = generate_code("UTL", Utilisateur.real_number()+1)
         modifier_par = user.code
         try:
-            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(nom=nom, prenom=prenom, date_naissance=date_naissance)
-            request.session['error'] = 'Un utilisateur ayant le même nom, le même prénom et la même date de naissance existe déjà.'
+            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(login=login)
+            request.session['error'] = 'Un utilisateur doit avoir un login unique.'
+            return redirect("/agents/list")
+        except:
+            pass
+        try:
+            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(nom=nom, prenom=prenom)
+            request.session['error'] = 'Un utilisateur ayant le même nom et le même prénom existe déjà.'
             return redirect("/agents/list")
         except:
             pass
@@ -138,13 +330,7 @@ def ajout_agent(request):
             return redirect("/agents/list")
         except:
             pass
-        try:
-            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(date_naissance__gt=max_date)
-            request.session['error'] = 'Date invalide'
-            return redirect("/agents/list")
-        except:
-            pass
-        u = Utilisateur(code=code,nom=nom, prenom=prenom, agence=agence, date_naissance=date_naissance, telephone=telephone, email=email, adresse=adresse, login=login, password=chiffrement_cesar(password, SECRET), profil=profil,modifier_par=modifier_par)
+        u = Utilisateur(code=code,nom=nom, prenom=prenom, agence=agence, telephone=telephone, email=email, adresse=adresse, login=login, password=chiffrement_cesar(password, SECRET), profil=profil,modifier_par=modifier_par)
         u.save()
         return redirect("/agents/list")
     return render(request, 'agents/add.html',{
@@ -162,14 +348,17 @@ def reaffectation_agent(request, agent_id):
     user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
     agences = Agence.objects.filter(date_cessation=INFINITY_DATE)
     agent = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=agent_id)
-    password = dechiffrement_cesar(agent.password, SECRET)
     if request.POST:
-        login = request.POST['login']
-        password = request.POST['password']
+        regeneratePass = bool(request.POST.get('regeneratePass', False))
+        
         agence = Agence.objects.filter(date_cessation=INFINITY_DATE).get(code=request.POST['agence'])
         modifier_par = user.code
         profil = Profil.objects.get(libelle="AGENT")
-        u = Utilisateur(code=agent.code,nom=agent.nom, prenom=agent.prenom, agence=agence, date_naissance=agent.date_naissance, telephone=agent.telephone, email=agent.email, adresse=agent.adresse, login=login, password=chiffrement_cesar(password, SECRET), profil=profil,modifier_par=modifier_par)
+        if regeneratePass:
+            password = generate_strong_password()
+        else:
+            password = agent.true_pass()
+        u = Utilisateur(code=agent.code,nom=agent.nom, prenom=agent.prenom, agence=agence, telephone=agent.telephone, email=agent.email, adresse=agent.adresse, login=agent.login, password=chiffrement_cesar(password, SECRET), profil=profil,modifier_par=modifier_par)
         u.save()
         agent.date_cessation = datetime.now()
         agent.modifier_par = user.code
@@ -180,9 +369,25 @@ def reaffectation_agent(request, agent_id):
         "error":error,
         "agences": agences,
         "agent": agent,
-        "password":password,
     }
     )
+
+def delete_agent(request, agent_id):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    try:
+        agent = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=agent_id)
+        agent.date_cessation = datetime.now()
+        agent.save()
+    except:
+        request.session['error'] = "Agent inexistant"
+    return redirect("/agents/list")
+    
+
 
 def add_many_agents(request):
     user_identifiant = request.session.get('user')
@@ -232,18 +437,6 @@ def ajout_agence(request):
     if request.POST:
         intitule = request.POST["intitule"].upper()
         site = request.POST["site"].upper()
-        longitude = None
-        latitude = None
-        try:
-            lo = request.POST["geolocalisation_longitude"]
-            lo = lo.replace(",", ".")
-            la = request.POST["geolocalisation_latitude"]
-            la = la.replace(",", ".")
-            longitude = float(lo)
-            latitude = float(la)
-        except:
-            request.session['error '] = 'L\'une des données de géolocalisation est incorrecte.'
-            return redirect("/agence/add")
         
         try:
             Agence.objects.filter(date_cessation=INFINITY_DATE).get(intitule=intitule)
@@ -251,21 +444,16 @@ def ajout_agence(request):
             return redirect("/agence/add")
         except:
             pass
-        try:
-            Agence.objects.filter(date_cessation=INFINITY_DATE).get(longitude=longitude, latitude=latitude)
-            request.session['error'] = 'L\'agence existe déjà.'
-            return redirect("/agence/add")
-        except:
-            pass
+        
         try:
             Agence.objects.filter(date_cessation=INFINITY_DATE).get(intitule=intitule,site=site)
             request.session['error'] = 'L\'agence existe déjà.'
             return redirect("/agence/add")
         except:
             pass
-        code = generate_code("AGC", Agence.objects.filter(date_cessation=INFINITY_DATE).count()+1)
+        code = generate_code("AGC", Agence.real_number()+1)
         modifier_par = user.code
-        agence = Agence(code = code, modifier_par =modifier_par ,site=site, intitule=intitule, geolocalisation_longitude=longitude, geolocalisation_latitude=latitude)
+        agence = Agence(code = code, modifier_par =modifier_par ,site=site, intitule=intitule)
         agence.save()
         return redirect("/agence/list")
     return render(request, 'agence/add.html',
@@ -287,23 +475,9 @@ def edit_agence(request, agence_id):
     if request.POST:
         intitule = request.POST["intitule"].upper()
         site = request.POST["site"].upper()
-        longitude = None
-        latitude = None
         agence.date_cessation = datetime.now()
         agence.modifier_par = user.code
         agence.save()
-        try:
-            lo = request.POST["geolocalisation_longitude"]
-            lo = lo.replace(",", ".")
-            la = request.POST["geolocalisation_latitude"]
-            la = la.replace(",", ".")
-            longitude = float(lo)
-            latitude = float(la)
-        except:
-            request.session['error'] = 'L\'une des données de géolocalisation est incorrecte.'
-            agence.date_cessation = INFINITY_DATE
-            agence.save()
-            return redirect("/agence/list")
         
         try:
             Agence.objects.filter(date_cessation=INFINITY_DATE).get(intitule=intitule)
@@ -313,14 +487,7 @@ def edit_agence(request, agence_id):
             return redirect("/agence/list")
         except:
             pass
-        try:
-            Agence.objects.filter(date_cessation=INFINITY_DATE).get(longitude=longitude, latitude=latitude)
-            request.session['error'] = 'L\'agence existe déjà.'
-            agence.date_cessation = INFINITY_DATE
-            agence.save()
-            return redirect("/agence/list")
-        except:
-            pass
+        
         try:
             Agence.objects.filter(date_cessation=INFINITY_DATE).get(intitule=intitule,site=site)
             request.session['error'] = 'L\'agence existe déjà.'
@@ -330,7 +497,7 @@ def edit_agence(request, agence_id):
         except:
             pass
         modifier_par = user.code
-        new_agence = Agence(code = agence.code, modifier_par =modifier_par ,site=site, intitule=intitule, geolocalisation_longitude=longitude, geolocalisation_latitude=latitude)
+        new_agence = Agence(code = agence.code, modifier_par =modifier_par ,site=site, intitule=intitule)
         new_agence.save()
         return redirect("/agence/list")
     return render(request, 'agence/edit.html',
@@ -380,7 +547,7 @@ def ajout_entite(request):
     user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
     if request.POST:
         denomination = request.POST.get('denomination').upper()
-        code = code = generate_code("ENT", Entite.objects.count()+1)
+        code = code = generate_code("ENT", Entite.real_number()+1)
         try:
             Entite.objects.filter(date_cessation=INFINITY_DATE).get(denomination=denomination)
             request.session['error'] = 'L\'entité existe déjà.'
@@ -463,7 +630,7 @@ def ajout_structure(request):
     if request.POST:
         denomination = request.POST.get('denomination').upper()
         entite=  Entite.objects.filter(date_cessation=INFINITY_DATE).get(code=request.POST.get('entite'))
-        code = code = generate_code("STR", Structure.objects.count()+1)
+        code = code = generate_code("STR", Structure.real_number()+1)
         try:
             Structure.objects.filter(date_cessation=INFINITY_DATE).get(denomination=denomination)
             request.session['error'] = 'La structure existe déjà.'
@@ -551,9 +718,8 @@ def ajout_service(request):
         intitule = request.POST.get('intitule', None)
         structure = request.POST.get('structure')
         structure = Structure.objects.filter(date_cessation=INFINITY_DATE).get(code=structure)
-        photo = request.FILES['photo']
         montant = request.POST.get('montant', None)
-        
+        couleur = Service.generate_color()
         try:
             montant = float(montant)
         except:
@@ -563,8 +729,8 @@ def ajout_service(request):
             Service.objects.filter(date_cessation=INFINITY_DATE).get(intitule=intitule)
             request.session['error'] = 'Le service existe déjà.'
         except:
-            code = code = generate_code("SRV", Service.objects.count()+1)
-            service = Service(code=code, intitule=intitule, montant=montant, modifier_par=user.code, structure=structure, photo=photo)
+            code = code = generate_code("SRV", Service.real_number()+1)
+            service = Service(code=code, intitule=intitule, montant=montant, couleur=couleur, modifier_par=user.code, structure=structure)
             service.save()
         
         return redirect("/service/list")
@@ -586,8 +752,8 @@ def edit_service(request, serv_id):
     if request.POST:
         intitule = request.POST.get('intitule', None)
         structure = request.POST.get('structure')
+        montant = request.POST.get('montant', None)
         structure = Structure.objects.filter(date_cessation=INFINITY_DATE).get(code=structure)
-        photo = request.FILES.get('photo', None)
         service.date_cessation = datetime.now()
         service.modifier_par = user.code
         service.save()
@@ -599,11 +765,8 @@ def edit_service(request, serv_id):
             return redirect("/service/list")
         except:
             pass
-        new_service = Service(code=service.code, intitule=intitule, modifier_par=user.code, structure=structure)
-        if photo is None:
-            new_service.photo = service.photo
-        else:
-            new_service.photo = photo
+        new_service = Service(code=service.code, intitule=intitule, couleur=service.couleur, modifier_par=user.code, structure=structure, montant=montant)
+        
         new_service.save()
 
         return redirect("/service/list")
@@ -641,7 +804,7 @@ def ajout_option(request):
             OptionSupplementaire.objects.filter(date_cessation=INFINITY_DATE).get(libelle=intitule)
             request.session['error'] = 'L\'option existe déjà.'
         except:
-            code = code = generate_code("OPT", OptionSupplementaire.objects.count()+1)
+            code = code = generate_code("OPT", OptionSupplementaire.real_number()+1)
             option = OptionSupplementaire(code=code, libelle=intitule, montant=montant, modifier_par=user.code)
             option.save()
         return redirect("/option/list")
@@ -699,7 +862,7 @@ def liste_demande(request):
     if user_identifiant is None:
         return redirect("/login")
     user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
-    demandes = Demande.objects.filter(date_cessation=INFINITY_DATE).filter(agent=user).order_by('-id')
+    demandes = Demande.objects.filter(date_cessation=INFINITY_DATE).filter(agent__code=user.code).order_by('-id')
     options_sup = OptionSupplementaire.objects.filter(date_cessation=INFINITY_DATE)
     return render(request, 'demande/list.html',
                   {"utilisateur": user,
@@ -712,6 +875,7 @@ def liste_demande(request):
 def ajout_demande(request):
     user_identifiant = request.session.get('user')
     error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
     if user_identifiant is None:
         return redirect("/login")
     user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
@@ -748,8 +912,8 @@ def ajout_demande(request):
                 pass
             service = Service.objects.filter(date_cessation=INFINITY_DATE).get(code=request.POST["service"])
             
-            code = generate_code("DEM", Demande.objects.count()+1)
-            code_client = generate_code("CLIENT",Client.objects.count()+1)
+            code = generate_code("DEM", Demande.real_number()+1)
+            code_client = generate_code("CLIENT",Client.real_number()+1)
             statut = StatutDemande.objects.filter(date_cessation=INFINITY_DATE).get(libelle="INITIE")
             client = Client(code=code_client, modifier_par=user.code, nom=nom, prenom=prenom, date_naissance=date_naissance, telephone=telephone, email=email, adresse=adresse)
             client.save()
@@ -764,7 +928,7 @@ def ajout_demande(request):
                         nb = int(nb)
                     else:
                         nb = 0
-                    code = generate_code("OPTDEM", OptionSupplementaireDemande.objects.count()+1)
+                    code = generate_code("OPTDEM", OptionSupplementaireDemande.real_number()+1)
                     option = OptionSupplementaire.objects.filter(date_cessation=INFINITY_DATE).get(id=int(opt.replace("nb", "")))
                     optionSupDemand = OptionSupplementaireDemande(demande=demande, option_supplementaire=option, nombre=nb, code=code, modifier_par=user.code)
                     optionSupDemand.save()
@@ -772,7 +936,7 @@ def ajout_demande(request):
             client = Client.objects.filter(date_cessation=INFINITY_DATE).get(code=request.POST["client"])
             service = Service.objects.filter(date_cessation=INFINITY_DATE).get(code=request.POST["service"])
             
-            code = generate_code("DEM", Demande.objects.count()+1)
+            code = generate_code("DEM", Demande.real_number()+1)
             statut = StatutDemande.objects.filter(date_cessation=INFINITY_DATE).get(libelle="INITIE")
             demande = Demande(statut= statut, client=client,code=code, modifier_par=user.code, agent=Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(code=user.code), service=service, observations=str(request.POST.get('observations', None)))
             demande.save()
@@ -785,7 +949,7 @@ def ajout_demande(request):
                         nb = int(nb)
                     else:
                         nb = 0
-                    code = generate_code("OPTDEM", OptionSupplementaireDemande.objects.count()+1)
+                    code = generate_code("OPTDEM", OptionSupplementaireDemande.real_number()+1)
                     option = OptionSupplementaire.objects.filter(date_cessation=INFINITY_DATE).get(id=int(opt.replace("nb", "")))
                     optionSupDemand = OptionSupplementaireDemande(demande=demande, option_supplementaire=option, nombre=nb, code=code, modifier_par=user.code)
                     optionSupDemand.save()
@@ -798,6 +962,121 @@ def ajout_demande(request):
                    "options_sup":options_sup,
                   }
     )
+
+def ajout_demande_new_client(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    services = Service.objects.filter(date_cessation=INFINITY_DATE)
+    options_sup = OptionSupplementaire.objects.filter(date_cessation=INFINITY_DATE)
+    if request.POST:
+        if True:
+            nom = request.POST["nom"]
+            prenom = request.POST["prenom"]
+            email = request.POST["email"]
+            telephone = request.POST["telephone"]
+            adresse = request.POST["adresse"]
+            date_naissance = request.POST["date_naissance"]
+            try:
+                cl = Client.objects.filter(date_cessation=INFINITY_DATE).get(nom=nom, prenom=prenom, date_naissance=date_naissance, email=email)
+                request.session["error"]=  f"Le client existe déjà et son code est {cl.code}"
+                return redirect("/demande/add")
+            except:
+                pass
+            
+            try:
+                cl = Client.objects.filter(date_cessation=INFINITY_DATE).get(telephone=telephone)
+                request.session["error"]=  f"Le client existe déjà et son code est {cl.code}"
+                return redirect("/demande/add")
+            except:
+                pass
+            
+            try:
+                cl = Client.objects.filter(date_cessation=INFINITY_DATE).get(email=email)
+                request.session["error"]=  f"Le client existe déjà et son code est {cl.code}"
+                return redirect("/demande/add")
+            except:
+                pass
+            service = Service.objects.filter(date_cessation=INFINITY_DATE).get(code=request.POST["service"])
+            
+            code = generate_code("DEM", Demande.real_number()+1)
+            code_client = generate_code("CLIENT",Client.real_number()+1)
+            statut = StatutDemande.objects.filter(date_cessation=INFINITY_DATE).get(libelle="INITIE")
+            client = Client(code=code_client, modifier_par=user.code, nom=nom, prenom=prenom, date_naissance=date_naissance, telephone=telephone, email=email, adresse=adresse)
+            client.save()
+            demande = Demande(statut= statut, client=client,code=code, modifier_par=user.code, agent=Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(code=user.code), service=service, observations=str(request.POST.get('observations', None)))
+            demande.save()
+            
+            nb_options_names = [f"nb{op.id}" for op in options_sup]
+            for opt in nb_options_names:
+                if opt in request.POST:
+                    nb = request.POST[opt]
+                    if nb != "":
+                        nb = int(nb)
+                    else:
+                        nb = 0
+                    code = generate_code("OPTDEM", OptionSupplementaireDemande.real_number()+1)
+                    option = OptionSupplementaire.objects.filter(date_cessation=INFINITY_DATE).get(id=int(opt.replace("nb", "")))
+                    optionSupDemand = OptionSupplementaireDemande(demande=demande, option_supplementaire=option, nombre=nb, code=code, modifier_par=user.code)
+                    optionSupDemand.save()
+            request.session['success'] = "La demande a bien été enregistrée."
+        return redirect("/demande/list")
+    
+    return render(request, 'demande/add_new_client.html',
+                  {
+                      "utilisateur": user,
+                      "error": error,
+                      "success": success,
+                      'services': services,
+                      "options_sup":options_sup,
+                   })
+
+def ajout_demande_old_client(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    services = Service.objects.filter(date_cessation=INFINITY_DATE)
+    options_sup = OptionSupplementaire.objects.filter(date_cessation=INFINITY_DATE)
+    clients = Client.objects.filter(date_cessation=INFINITY_DATE)
+    if request.POST:
+        if True:
+            client = Client.objects.filter(date_cessation=INFINITY_DATE).get(code=request.POST["client"])
+            service = Service.objects.filter(date_cessation=INFINITY_DATE).get(code=request.POST["service"])
+            
+            code = generate_code("DEM", Demande.real_number()+1)
+            statut = StatutDemande.objects.filter(date_cessation=INFINITY_DATE).get(libelle="INITIE")
+            demande = Demande(statut= statut, client=client,code=code, modifier_par=user.code, agent=Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(code=user.code), service=service, observations=str(request.POST.get('observations', None)))
+            demande.save()
+            
+            nb_options_names = [f"nb{op.id}" for op in options_sup]
+            for opt in nb_options_names:
+                if opt in request.POST:
+                    nb = request.POST[opt]
+                    if nb != "":
+                        nb = int(nb)
+                    else:
+                        nb = 0
+                    code = generate_code("OPTDEM", OptionSupplementaireDemande.real_number()+1)
+                    option = OptionSupplementaire.objects.filter(date_cessation=INFINITY_DATE).get(id=int(opt.replace("nb", "")))
+                    optionSupDemand = OptionSupplementaireDemande(demande=demande, option_supplementaire=option, nombre=nb, code=code, modifier_par=user.code)
+                    optionSupDemand.save()
+            request.session['success'] = "La demande a bien été enregistrée."
+        return redirect("/demande/list")
+    return render(request, 'demande/add_old_client.html',
+                  {
+                      "utilisateur": user,
+                      "error": error,
+                      "success": success,
+                      "clients":clients,
+                      'services': services,
+                      "options_sup":options_sup,
+                   })
 
 def suivre_demande(request,dem_id):
     user_identifiant = request.session.get('user')
@@ -827,7 +1106,7 @@ def suivre_demande(request,dem_id):
                         nb = int(nb)
                     else:
                         nb = 0
-                    code = generate_code("OPTDEM", OptionSupplementaireDemande.objects.count()+1)
+                    code = generate_code("OPTDEM", OptionSupplementaireDemande.real_number()+1)
                     option = OptionSupplementaire.objects.filter(date_cessation=INFINITY_DATE).get(id=int(opt.replace("nb", "")))
                     optionSupDemand = OptionSupplementaireDemande(demande=new_demande, option_supplementaire=option, nombre=nb, code=code, modifier_par=user.code)
                     optionSupDemand.save()
@@ -864,7 +1143,7 @@ def other_demande(request):
             year = date.split("-")[0]
             month = date.split("-")[1]
             day = date.split("-")[2]
-            return redirect(f"/demande/view_date/{year}/{month}/{day}")
+            return redirect(f"/demande/view_date/{year}/{month}/{day}/")
     return render(request, 'demande/other.html',
                   {"utilisateur": user,
                    "error": error,
@@ -904,8 +1183,8 @@ def view_demande_by_agence(request, agence_code):
         demandes = None
     if agence is not None:
         agents = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).filter(agence=agence)
-        demandes = Demande.objects.filter(date_cessation=INFINITY_DATE).filter(agent__in=agents)
-    return render(request, 'demande/view_agence.html',
+        demandes = Demande.objects.filter(date_cessation=INFINITY_DATE).filter(agent__code__in=agents.filter(date_cessation=INFINITY_DATE).values_list('code', flat=True).distinct())
+    return render(request, 'demande/search.html',
                   {
                       "utilisateur":user,
                       "error":error,
@@ -925,8 +1204,8 @@ def view_demande_by_client(request, client_code):
         client = None
         demandes = None
     if client is not None:
-        demandes = Demande.objects.filter(date_cessation=INFINITY_DATE).filter(client=client)
-    return render(request, 'demande/view_client.html',
+        demandes = Demande.objects.filter(date_cessation=INFINITY_DATE).filter(client__code=client.code)
+    return render(request, 'demande/search.html',
                   {
                       "utilisateur":user,
                       "error":error,
@@ -945,7 +1224,7 @@ def view_demande_by_date(request, year, month, day):
         demandes = Demande.objects.filter(date_cessation=INFINITY_DATE).filter(date_creation=date)
     except:
         demandes = None
-    return render(request, 'demande/view_date.html',
+    return render(request, 'demande/search.html',
                   {
                       "utilisateur":user,
                       "error":error,
@@ -964,3 +1243,236 @@ def delete_demande(request, dem_id):
     demande.modifier_par = user.code
     demande.save()
     return redirect("/demande/list")
+
+def historique_demande(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    demandes_code = Demande.objects.values_list('code', flat=True).distinct()
+    demandes = []
+    for code in demandes_code:
+        demande = Demande.objects.filter(code=code).last()
+        demandes.append(demande)
+    return render(request, 'historique/demande.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+        "demandes":demandes,
+    })
+
+def histo_agence_agent(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    agences = Agence.objects.filter(date_cessation=INFINITY_DATE)
+    agents = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).filter(agence__in=agences).filter(profil__id=2)
+    if request.POST:
+        if "agent" in request.POST:
+            code_agent = request.POST.get("agent", None)
+            return redirect(f"/historique/agent/{code_agent}")
+        elif "agence" in request.POST:
+            code_agence = request.POST.get("agence", None)
+            return redirect(f"/historique/agence/{code_agence}")
+        else:
+            return redirect("/historique/agence-agent")
+    return render(request, 'historique/agence_agent.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+        "agences":agences,
+        "agents":agents,
+    })
+
+def historique_demande_by_agence(request, agence_code):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    try:
+        agence = Agence.objects.filter(date_cessation=INFINITY_DATE).get(code=agence_code)
+    except:
+        agence = None
+        demandes = None
+    if agence is not None:
+        agents = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).filter(agence=agence)
+        demandes_code = Demande.objects.filter(agent__code__in=agents.filter(date_cessation=INFINITY_DATE).values_list('code', flat=True).distinct()).values_list('code', flat=True).distinct()
+        demandes = []
+        for code in demandes_code:
+            demande = Demande.objects.filter(code=code).last()
+            demandes.append(demande)
+    return render(request, 'historique/demande.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+        "demandes":demandes,
+    })
+
+def historique_demande_by_agent(request, agent_code):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    demandes = Demande.objects.filter(agent__code=agent_code).filter(date_cessation=INFINITY_DATE).order_by('-date_creation')
+    return render(request, 'historique/demande.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+        "demandes":demandes,
+    })
+
+def stat_agence_agent(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    agences = Agence.objects.filter(date_cessation=INFINITY_DATE)
+    agents = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).filter(agence__in=agences).filter(profil__id=2)
+    services = Service.objects.filter(date_cessation=INFINITY_DATE)
+    valeurs = [service.sollicitation_count() for service in services]
+    couleurs = [service.couleur for service in services]
+    noms = [service.intitule for service in services]
+    donnees = {"valeurs":valeurs, "couleurs":couleurs, "noms":noms}
+    if request.POST:
+        if "agent" in request.POST:
+            code_agent = request.POST.get("agent", None)
+            return redirect(f"/statistique/stat/agent/{code_agent}")
+        elif "agence" in request.POST:
+            code_agence = request.POST.get("agence", None)
+            return redirect(f"/statistique/stat/{code_agence}")
+        else:
+            return redirect("/statistique/agence-agent")
+    return render(request, 'statistique/agence_agent.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+        "agences":agences,
+        "agents":agents,
+        "donnees":donnees,
+    })
+
+def stat_by_agence(request, agence_code):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    try:
+        agence = Agence.objects.filter(date_cessation=INFINITY_DATE).get(code=agence_code)
+    except:
+        agence = None
+        donnees = None
+    if agence is not None:
+        valeurs = agence.sollicitation()
+        services = Service.objects.filter(date_cessation=INFINITY_DATE)
+        couleurs = [service.couleur for service in services]
+        noms = [service.intitule for service in services]
+        donnees = {"valeurs":valeurs, "couleurs":couleurs, "noms":noms}
+    return render(request, 'statistique/stat.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+        "donnees":donnees,
+    })
+
+def stat_by_agent(request, agent_code):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    try:
+        agent = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(code=agent_code)
+    except:
+        agent = None
+        donnees = None
+    if agent is not None:
+        valeurs = agent.sollicitation()
+        services = Service.objects.filter(date_cessation=INFINITY_DATE)
+        couleurs = [service.couleur for service in services]
+        noms = [service.intitule for service in services]
+        donnees = {"valeurs":valeurs, "couleurs":couleurs, "noms":noms}
+    return render(request, 'statistique/stat.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+        "donnees":donnees,
+    })
+
+def liste_client(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    clients = Client.objects.filter(date_cessation=INFINITY_DATE).order_by('nom')
+    return render(request, 'client/list.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+        "clients":clients,
+    })
+
+def edit_client(request, client_id):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    client = Client.objects.filter(date_cessation=INFINITY_DATE).get(id=client_id)
+    if request.POST:
+        nom = request.POST.get("nom", None)
+        prenom = request.POST.get("prenom", None)
+        telephone = request.POST.get("telephone", None)
+        adresse = request.POST.get("adresse", None)
+        email = request.POST.get("email", None)
+        date_naissance = request.POST.get("date_naissance", None)
+        try:
+            new_client = Client(nom=nom, prenom=prenom, telephone=telephone, adresse=adresse, email=email, date_naissance=date_naissance, code=client.code, modifier_par=user.code)
+            new_client.save()
+            client.date_cessation = datetime.now()
+            client.save()
+            success = "Les informations du client ont été modifiées avec succès"
+            request.session["success"] = success
+            return redirect("/client/list")
+        except:
+            error = "Veuillez remplir tous les champs"
+            request.session["error"] = error
+            return redirect(f"/client/edit/{client.id}")
+    return render(request, 'client/edit.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+        "client":client,
+    })
+
+def historique_clients(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    return render(request, "historique/clients.html",
+                  {
+                      "utilisateur": user,
+                      "error": error,
+                      "success":success,
+                      "clients": Client.objects.filter(date_cessation=INFINITY_DATE).order_by('-date_cessation')
+                  }
+                  )

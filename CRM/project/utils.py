@@ -2,9 +2,57 @@ import random
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import send_mail, EmailMultiAlternatives
+import random
+import string
+from num2words import num2words
+import datetime
+
+def generer_code_couleur():
+    # Génération de trois composantes de couleur en format hexadécimal
+    r = random.randint(0, 255)
+    g = random.randint(0, 255)
+    b = random.randint(0, 255)
+    
+    # Formatage des composantes en hexadécimal
+    code_couleur = "#{:02x}{:02x}{:02x}".format(r, g, b)
+    
+    return code_couleur
+
+
+
+def generate_strong_password(length=12):
+    """Generate a strong password."""
+    # Define character sets
+    lowercase_letters = string.ascii_lowercase
+    uppercase_letters = string.ascii_uppercase
+    digits = string.digits
+    special_characters = string.punctuation
+
+    # Combine character sets
+    all_characters = lowercase_letters + uppercase_letters + digits + special_characters
+
+    # Ensure at least one character from each set
+    password = random.choice(lowercase_letters)
+    password += random.choice(uppercase_letters)
+    password += random.choice(digits)
+    password += random.choice(special_characters)
+
+    # Fill remaining length with random characters
+    for _ in range(length - 4):
+        password += random.choice(all_characters)
+
+    # Shuffle the password to make it more random
+    password_list = list(password)
+    random.shuffle(password_list)
+    password = ''.join(password_list)
+
+    return password
+
 
 def generate_code(prefix, position):
-    s = prefix + '{:020d}'.format(position)
+    date = datetime.datetime.now()
+    f = str(date.year)[-2:] + f'{date.month:02d}' + f'{date.day:02d}' + f'{date.hour:02d}' + f'{date.minute:02d}' + f'{date.second:02d}'
+    s = prefix + '{:08d}'.format(position) + f
     return s
 
 def generate_random(prefix):
@@ -72,3 +120,9 @@ def sendMail(template, context, subject, mailFrom, mailTo):
     except:
         return False
     return True
+
+def nombre_en_lettres(nombre):
+    # Conversion du nombre en mots en utilisant la langue française
+    nombre_en_mots = num2words(nombre, lang='fr')
+    
+    return nombre_en_mots

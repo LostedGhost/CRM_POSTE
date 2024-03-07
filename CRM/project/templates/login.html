@@ -48,13 +48,13 @@
 					</div>
 					<p class="mt-2 text-white">Login et Mot de passe</p>
                     
-					<form class="needs-validation" novalidate method="POST">
+					<form class="needs-validation" method="POST">
                         {% csrf_token %}
                         <div class="input-group mb-3"> <span class="input-group-text col-4" id="basic-addon1">Login</span>
-                            <input type="text" class="form-control" placeholder="Login" aria-label="Login" aria-describedby="basic-addon1" name="login">
+                            <input type="text" class="form-control" placeholder="Login" aria-label="Login" aria-describedby="basic-addon1" name="login" required>
                         </div>
                         <div class="input-group mb-3" id="show_hide_password"> <span class="input-group-text col-4" id="basic-addon1">Password</span>
-                            <input type="password" class="form-control" placeholder="********" aria-label="Password" aria-describedby="basic-addon1" name="password"> <a href="javascript:;" class="input-group-text bg-transparent"><i class='bx bx-hide'></i></a>
+                            <input type="password" class="form-control" placeholder="********" aria-label="Password" aria-describedby="basic-addon1" name="password" required>
                         </div>
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary px-3">Se connecter</button>

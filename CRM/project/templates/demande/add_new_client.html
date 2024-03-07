@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Ajout d'une demande client {% endblock %}
+
+{% block body %}
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>AJOUT DE DEMANDE D'UN NOUVEAU CLIENT</h6>
+
+<div class="div-center">
+    <div class="card-body">
+        
+                        <div class="card border p-4 rounded">
+                            
+                            <form id="form" name="myform" method="POST"  
+                                class="form-horizontal bg-form row g-3">
+                                {% csrf_token %}
+                                <div class="card-title d-flex align-items-center">
+                                    <div>
+                                        <i class="bx bxs-user-pin  me-1 font-22 text-blue-sewar"></i>
+                                    </div>
+                                    <h5 class="mb-0 text-blue-sewar text-uppercase">Informations Générales du client</h5>
+                                </div>
+                                <hr />
+                                <div class="col-md-6">
+                                    <label class="col-sm-12 col-form-label">Nom *</label>
+                                    <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bxs-user'></i></span>
+                                        <input type="text" class="form-control" name="nom" id="inputNom" 
+                                            placeholder="NOM" required/> 
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-sm-12 col-form-label">Prénom *</label>
+                                    <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bxs-user'></i></span>
+                                        <input type="text" class="form-control" name="prenom" id="inputPrenom" 
+                                        placeholder="Prénom" required/>
+                                    </div>
+                                </div>
+        
+                                <div class="col-md-6">
+                                    <label class="col-sm-12 col-form-label">Email *</label>
+                                    <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bxs-message' ></i></span>
+                                        <input type="email" class="form-control" name="email" id="inputEmail" 
+                                        placeholder="example@gmail.com" required/>
+                                    </div>
+                                </div>
+        
+                                <div class="col-md-6">
+                                    <label class="col-sm-12 col-form-label">Téléphone *</label>
+                                    <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-phone-call' ></i></span>
+                                        <input type="text" class="form-control" name="telephone" id="inputTelephone" 
+                                        placeholder="21XXXXXX" required/>
+                                    </div>
+                                </div>
+        
+                                <div class="col-md-6 mx-auto">
+                                    <label class="col-sm-12 col-form-label">Adresse *</label>
+                                    <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-location-plus' ></i></span>
+                                        <input type="text" class="form-control" name="adresse" id="inputAdresse" 
+                                        placeholder="Cotonou" required/>
+                                    </div>
+                                </div>
+        
+                                <br>
+                                <div class="col-md-6">
+                                    <label class="col-sm-12 col-form-label">Date de naissance *</label>
+                                    <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bxs-calendar' ></i></span>
+                                        <input type="date" name="date_naissance" class="form-control" id="inputDateNaissance" placeholder="JJ/MM/AAAA" required max="{{max_date}}">
+                                    </div>
+                                </div>
+                                
+                                <div class="card-title d-flex align-items-center">
+                                    <div>
+                                        <i class="bx bxs-bookmark  me-1 font-22 text-blue-sewar"></i>
+                                    </div>
+                                    <h5 class="mb-0 text-blue-sewar text-uppercase">Informations Relative à la demande</h5>
+                                </div>
+                                <hr />
+                                <div class="card-body col-md-6">
+                                    <div class="col-md-8 mb-3">
+                                        <label class="col-sm-6 col-form-label">Service sollicité *</label>
+                                        <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-paper-plane' ></i></span>
+                                            <select name="service" id="inputService" class="form-control single-select">
+                                                <option value="">Sélectionnez le service </option>
+                                                {%for service in services %}
+                                                <option value="{{service.code}}">{{service.structure.entite.denomination}} - {{service.structure.denomination}} / {{service.intitule}}</option>
+                                                {%endfor%}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <ul class="nav nav-pills nav-pills-warning mb-3" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <a class="nav-link active" data-bs-toggle="pill" href="#pas-frais-supp" role="tab" aria-selected="true">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="tab-icon">
+                                                        </div>
+                                                        <div class="tab-title">Pas de frais supplémentaires</div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <a class="nav-link" data-bs-toggle="pill" href="#frais-supp" role="tab" aria-selected="false">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="tab-icon">
+                                                        </div>
+                                                        <div class="tab-title">Frais supplémentaires</div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane fade show active" id="pas-frais-supp" role="tabpanel">
+                                                
+                                            </div>
+                                            <div class="tab-pane fade" id="frais-supp" role="tabpanel">
+                                                {%if options_sup.count == 0%}
+                                                Pas d'options supplémentaires
+                                                {%else%}
+                                                {%for option in options_sup%}
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="col-sm-12 col-form-label">{{option.libelle_rep}} *</label>
+                                                    <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-scan' ></i></span>
+                                                        <input type="number" class="form-control" name="nb{{option.id}}" id="inputOptSup{{option.id}}" 
+                                                        placeholder="0" min="0"/>
+                                                    </div>
+                                                </div>
+                                                {%endfor%}
+                                                {%endif%}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-8 mb-3">
+                                        <label class="col-sm-6 col-form-label text-uppercase">Observations </label>
+                                        <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-chat' ></i></span>
+                                            <textarea class="form-control" name="observations" id="inputObservations" rows="5" placeholder="Observations"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                 
+
+                                    <div class="form-group text-center">
+                                        <button class="btn btn-blue-s mr-2" type="submit" id="enregistrer" 
+                                        > Enregistrer
+                                        </button >
+                                        <a href="/demande/list" class="btn btn-light border" type="button" id="fermer">Fermer
+                                        </a>
+                                    </div>
+                            </form>
+                        </div>
+    </div>
+</div>
+{% endblock %}

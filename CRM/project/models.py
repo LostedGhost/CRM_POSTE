@@ -8,66 +8,76 @@ from .utils import *
 from .config import *
 
 # Create your models here.
-
+    
 class BaseEntity(models.Model):
     id = models.AutoField(primary_key=True, auto_created=True)
     code = models.CharField(max_length=MAX_CODE_LENGTH)
-    date_creation = models.DateField(auto_now_add=True)
-    date_cessation = models.DateField(default=INFINITY_DATE)
-    modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
+    date_creation = models.DateTimeField(auto_now_add=True)
+    date_cessation = models.DateTimeField(default=timezone.datetime(9999, 12, 31))
+    modifier_par = models.CharField(max_length=MAX_CODE_LENGTH, default="")
     
-    def save(self, classe, prefix, *args, **kwargs):
-        if not self.pk:
-            self.code = generate_code(prefix, classe.objects.count())
-        super(classe, self).save(*args, **kwargs)
+    
+    def date_creation_rep(self):
+        return self.date_creation.strftime("%Y-%m-%d %H:%M:%S") if self.date_creation != INFINITY_DATE else "Infinie"
+    
+    def date_cessation_rep(self):
+        return self.date_cessation.strftime("%Y-%m-%d %H:%M:%S") if self.date_cessation != INFINITY_DATE else "Infinie"
+    
         
     class Meta:
         abstract = True
 
-class Profil(models.Model):
-    id = models.AutoField(primary_key=True, auto_created=True)
+class Profil(BaseEntity):
+    """ id = models.AutoField(primary_key=True, auto_created=True)
     code = models.CharField(max_length=MAX_CODE_LENGTH)
     date_creation = models.DateField(auto_now_add=True)
     date_cessation = models.DateField(default=INFINITY_DATE)
     modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
-    is_deleted = models.BooleanField(default=False)
+     """
     libelle = models.CharField(max_length=MAX_LABEL_LENGTH)
+    
+    def real_number():
+        return Profil.objects.all().values_list('code', flat=True).distinct().count()
 
-class Ville(models.Model):
-    id = models.AutoField(primary_key=True, auto_created=True)
+class Ville(BaseEntity):
+    """ id = models.AutoField(primary_key=True, auto_created=True)
     code = models.CharField(max_length=MAX_CODE_LENGTH)
     date_creation = models.DateField(auto_now_add=True)
     date_cessation = models.DateField(default=INFINITY_DATE)
     modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
-    is_deleted = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False) """
 
     intitule = models.CharField(max_length=MAX_LABEL_LENGTH)
-    code_postal = models.CharField(max_length=MAX_LABEL_LENGTH)
-    pays = models.CharField(max_length=MAX_LABEL_LENGTH)
 
-class Agence(models.Model):
-    id = models.AutoField(primary_key=True, auto_created=True)
+class Agence(BaseEntity):
+    """ id = models.AutoField(primary_key=True, auto_created=True)
     code = models.CharField(max_length=MAX_CODE_LENGTH)
     date_creation = models.DateField(auto_now_add=True)
     date_cessation = models.DateField(default=INFINITY_DATE)
     modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
-    is_deleted = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False) """
     
     intitule = models.CharField(max_length=MAX_LABEL_LENGTH)
     site = models.CharField(max_length=MAX_LABEL_LENGTH)
-    geolocalisation_longitude = models.FloatField(default=0)
-    geolocalisation_latitude = models.FloatField(default=0)
+    
+    def sollicitation(self):
+        services = Service.objects.filter(date_cessation=INFINITY_DATE)
+        sol = [s.sollicitation_agence_by_code(self.code) for s in services]
+        return sol
+    
+    def real_number():
+        return Agence.objects.all().values_list('code', flat=True).distinct().count()
 
-class Utilisateur(models.Model):
-    id = models.AutoField(primary_key=True, auto_created=True)
+class Utilisateur(BaseEntity):
+    """ id = models.AutoField(primary_key=True, auto_created=True)
     code = models.CharField(max_length=MAX_CODE_LENGTH)
     date_creation = models.DateField(auto_now_add=True)
     date_cessation = models.DateField(default=INFINITY_DATE)
     modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
-    is_deleted = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False) """
+    
     nom = models.CharField(max_length=MAX_LABEL_LENGTH)
     prenom = models.CharField(max_length=MAX_LABEL_LENGTH)
-    date_naissance = models.DateField(default=BIRTH_DEFAULT)
     email = models.EmailField()
     telephone = models.CharField(max_length=10)
     adresse = models.CharField(max_length=MAX_LABEL_LENGTH)
@@ -77,6 +87,7 @@ class Utilisateur(models.Model):
     profil = models.ForeignKey(Profil, on_delete=models.CASCADE, related_name="profil_utilisateur")
     agence = models.ForeignKey(Agence, on_delete=models.CASCADE, related_name="agence_utilisateur", null=True)
     is_active = models.BooleanField(default=False)
+    can_connect = models.BooleanField(default=True)
     
     def generate_login():
         c = generate_random("USER@")
@@ -96,51 +107,99 @@ class Utilisateur(models.Model):
 
     def true_pass(self):
         return dechiffrement_cesar(self.password, SECRET)
+    
+    def sollicitation(self):
+        services = Service.objects.filter(date_cessation=INFINITY_DATE)
+        sol = [s.sollicitation_agent_by_code(self.code) for s in services]
+        return sol
+    
+    def sollicitation_agence(self):
+        services = Service.objects.filter(date_cessation=INFINITY_DATE)
+        sol = [s.sollicitation_agence_by_code(self.agence.code) for s in services]
+        return sol
+    
+    def real_number():
+        return Utilisateur.objects.all().values_list('code', flat=True).distinct().count()
+    
 class AddUsersFiles(models.Model):
     fichier_xl = models.FileField(upload_to="excel_files", null=True)
 
-class Entite(models.Model):
-    id = models.AutoField(primary_key=True, auto_created=True)
+class Entite(BaseEntity):
+    """ id = models.AutoField(primary_key=True, auto_created=True)
     code = models.CharField(max_length=MAX_CODE_LENGTH)
     date_creation = models.DateField(auto_now_add=True)
     date_cessation = models.DateField(default=INFINITY_DATE)
     modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
-    is_deleted = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False) """
     
     denomination = models.CharField(max_length=MAX_LABEL_LENGTH)
+    def real_number():
+        return Entite.objects.all().values_list('code', flat=True).distinct().count()
 
-class Structure(models.Model):
-    id = models.AutoField(primary_key=True, auto_created=True)
+class Structure(BaseEntity):
+    """ id = models.AutoField(primary_key=True, auto_created=True)
     code = models.CharField(max_length=MAX_CODE_LENGTH)
     date_creation = models.DateField(auto_now_add=True)
     date_cessation = models.DateField(default=INFINITY_DATE)
     modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
-    is_deleted = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False) """
     
     denomination = models.CharField(max_length=MAX_LABEL_LENGTH)
     entite = models.ForeignKey(Entite, on_delete=models.CASCADE, related_name="entite_structure", null=True)
 
-class Service(models.Model):
-    id = models.AutoField(primary_key=True, auto_created=True)
+    def real_number():
+        return Structure.objects.all().values_list('code', flat=True).distinct().count()
+class Service(BaseEntity):
+    """ id = models.AutoField(primary_key=True, auto_created=True)
     code = models.CharField(max_length=MAX_CODE_LENGTH)
     date_creation = models.DateField(auto_now_add=True)
     date_cessation = models.DateField(default=INFINITY_DATE)
     modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
-    is_deleted = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False) """
     
     intitule = models.CharField(max_length=MAX_LABEL_LENGTH)
     structure = models.ForeignKey(Structure, on_delete=models.CASCADE, related_name="structure_service")
-    photo = models.ImageField(upload_to="photos/service", blank=True)
     montant = models.FloatField(default=0)
+    couleur = models.CharField(max_length=MAX_LABEL_LENGTH, default='#fff')
     
+    
+    def generate_color():
+        color = generer_code_couleur()
+        while color in Service.objects.filter(date_cessation=INFINITY_DATE).values_list('couleur', flat=True).distinct():
+            color = generer_code_couleur()
+        return color
 
-class Client(models.Model):
-    id = models.AutoField(primary_key=True, auto_created=True)
+    def sollicitation(self):
+        s = Demande.objects.filter(date_cessation=INFINITY_DATE).filter(service=self)
+        return s
+    
+    def sollicitation_count(self):
+        return Demande.objects.filter(date_cessation=INFINITY_DATE).filter(service=self).count()
+    
+    def sollicitation_agence_by_code(self, agence_code):
+        s = 0
+        for d in Demande.objects.filter(date_cessation=INFINITY_DATE).filter(service=self):
+            if d.agent.agence.code == agence_code:
+                s += 1
+        return s
+    
+    def sollicitation_agent_by_code(self, agent_code):
+        s = 0
+        for d in Demande.objects.filter(date_cessation=INFINITY_DATE).filter(service=self):
+            if d.agent.code == agent_code:
+                s += 1
+        return s
+    
+    def real_number():
+        return Service.objects.all().values_list('code', flat=True).distinct().count()
+
+class Client(BaseEntity):
+    """ id = models.AutoField(primary_key=True, auto_created=True)
     code = models.CharField(max_length=MAX_CODE_LENGTH)
     date_creation = models.DateField(auto_now_add=True)
     date_cessation = models.DateField(default=INFINITY_DATE)
     modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
-    is_deleted = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False) """
     
     nom = models.CharField(max_length=MAX_LABEL_LENGTH)
     prenom = models.CharField(max_length=MAX_LABEL_LENGTH)
@@ -149,25 +208,34 @@ class Client(models.Model):
     email = models.EmailField(max_length=MAX_LABEL_LENGTH)
     adresse = models.CharField(max_length=MAX_LABEL_LENGTH)
     
+    def real_number():
+        return Client.objects.all().values_list('code', flat=True).distinct().count()
+    def date_naissance_rep(self):
+        birthdate=""
+        birthdate+=str(self.date_naissance.year)+"-"+'{:02d}'.format(self.date_naissance.month)+"-"+'{:02d}'.format(self.date_naissance.day)
+        return birthdate
+    
     
 
-class StatutDemande(models.Model):
-    id = models.AutoField(primary_key=True, auto_created=True)
+class StatutDemande(BaseEntity):
+    """ id = models.AutoField(primary_key=True, auto_created=True)
     code = models.CharField(max_length=MAX_CODE_LENGTH)
     date_creation = models.DateField(auto_now_add=True)
     date_cessation = models.DateField(default=INFINITY_DATE)
     modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
-    is_deleted = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False) """
     
     libelle = models.CharField(max_length=MAX_LABEL_LENGTH)
+    def real_number():
+        return StatutDemande.objects.all().values_list('code', flat=True).distinct().count()
 
-class Demande(models.Model):
-    id = models.AutoField(primary_key=True, auto_created=True)
+class Demande(BaseEntity):
+    """ id = models.AutoField(primary_key=True, auto_created=True)
     code = models.CharField(max_length=MAX_CODE_LENGTH)
     date_creation = models.DateField(auto_now_add=True)
     date_cessation = models.DateField(default=INFINITY_DATE)
     modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
-    is_deleted = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False) """
     
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="client_demande")
     agent = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, related_name="agent_demande")
@@ -178,16 +246,63 @@ class Demande(models.Model):
     def optionsSupplementaires(self):
         return OptionSupplementaireDemande.objects.filter(demande=self)
     
+    def montant_percu(self):
+        optSup = self.optionsSupplementaires()
+        montant = 0
+        for op in optSup:
+            montant += op.montantOpt()
+        return montant
+    
     def optionSup(self, option):
         return OptionSupplementaireDemande.objects.get(demande=self, libelle=option)
     
-class OptionSupplementaire(models.Model):
-    id = models.AutoField(primary_key=True, auto_created=True)
+    def tous_cout_supp(self):
+        return OptionSupplementaireDemande.objects.filter(demande__code=self.code)
+    
+    def toutes_observations(self):
+        all = Demande.objects.filter(code=self.code).values_list('observations', flat=True)
+        return all
+    
+    def all_of_code(self):
+        return Demande.objects.filter(code=self.code).order_by('id')
+    def montant_total(self):
+        opt = self.tous_cout_supp()
+        montant = 0
+        for o in opt:
+            montant += o.montantOpt()
+        return montant
+    
+    def real_number():
+        return Demande.objects.all().values_list('code', flat=True).distinct().count()
+    
+    def to_dict(self):
+        d = {}
+        d['code'] = self.code
+        d['date_creation'] = self.date_creation
+        d['date_cessation'] = self.date_cessation
+        d['modifier_par'] = self.modifier_par
+        d['client_nom_prenom'] = self.client.nom + " " + self.client.prenom
+        d['client_adresse'] = self.client.adresse
+        d['client_email'] = self.client.email
+        d['agence_nom'] = self.agent.agence.intitule
+        d['agence_site'] = self.agent.agence.site
+        d['agent_nom_prenom'] = self.agent.nom + " " + self.agent.prenom
+        
+        d['service'] = self.service.intitule
+        d['opts'] = [{'libelle': o.option_supplementaire.libelle,'montant': o.option_supplementaire.montant, 'nombre':o.nombre, 'montantOpt':o.montantOpt()} for o in self.optionsSupplementaires()]
+        d['opts_length'] = len(d['opts'])
+        d['montant_percu'] = self.montant_percu()
+        print(d)
+        return d
+    
+    
+class OptionSupplementaire(BaseEntity):
+    """ id = models.AutoField(primary_key=True, auto_created=True)
     code = models.CharField(max_length=MAX_CODE_LENGTH)
     date_creation = models.DateField(auto_now_add=True)
     date_cessation = models.DateField(default=INFINITY_DATE)
     modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
-    is_deleted = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False) """
 
     libelle = models.CharField(max_length=MAX_LABEL_LENGTH)
     montant = models.IntegerField(default=0)
@@ -197,14 +312,17 @@ class OptionSupplementaire(models.Model):
             return f"Nombre d'{self.libelle.lower()} éffectués(es)"
         else:
             return f"Nombre de {self.libelle.lower()} éffectués(es)"
+    
+    def real_number():
+        return OptionSupplementaire.objects.all().values_list('code', flat=True).distinct().count()
 
-class OptionSupplementaireDemande(models.Model):
-    id = models.AutoField(primary_key=True, auto_created=True)
+class OptionSupplementaireDemande(BaseEntity):
+    """ id = models.AutoField(primary_key=True, auto_created=True)
     code = models.CharField(max_length=MAX_CODE_LENGTH)
     date_creation = models.DateField(auto_now_add=True)
     date_cessation = models.DateField(default=INFINITY_DATE)
     modifier_par = models.CharField(max_length=MAX_CODE_LENGTH)
-    is_deleted = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False) """
     
     demande = models.ForeignKey(Demande, on_delete=models.CASCADE, related_name="demande_option_supplementaire")
     option_supplementaire = models.ForeignKey(OptionSupplementaire, on_delete=models.CASCADE, related_name="option_supplementaire_demande")
@@ -212,3 +330,6 @@ class OptionSupplementaireDemande(models.Model):
     
     def montantOpt(self):
         return self.option_supplementaire.montant * self.nombre
+    
+    def real_number():
+        return OptionSupplementaireDemande.objects.all().values_list('code', flat=True).distinct().count()

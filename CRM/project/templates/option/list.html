@@ -14,7 +14,7 @@
 							<table id="myDataTable" class="table table-striped table-bordered table-hover my-3">
 								<thead>
 									<tr>
-										<th>Code</th>
+										<th>Date de la dernière modification</th>
                                         <th>Dénomination</th>
                                         <th>Montant</th>
 										<th class="text-end">Actions</th>
@@ -23,7 +23,7 @@
 								<tbody>
                                     {% for option in options %}
                                     <tr>
-                                        <td>{{option.code}}</td>
+										<td>{{option.date_creation_rep}} </td>
                                         <td>{{option.libelle}}</td>
                                         <td class="text-center">{{option.montant}} (Francs CFA)</td>
                                         <td class="text-end">

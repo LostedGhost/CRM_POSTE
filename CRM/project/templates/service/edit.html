@@ -44,10 +44,11 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6 mx-auto">
-                            <label class="col-sm-6 col-form-label">Photo *</label>
-                            <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-photo-album' ></i></span>
-                                <input type="file" name="photo" accept=".png, .jpg" class="form-control" id="inputPhoto" placeholder="Photo de profil"/>
+                        <div class="col-md-4 mx-auto">
+                            <label class="col-sm-12 col-form-label">Montant du service *</label>
+                            <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-money' ></i></span>
+                                <input type="text" class="form-control" name="montant" id="inputMontant" 
+                                placeholder="00,00" value="{{service.montant}}" required/>
                             </div>
                         </div>
                         

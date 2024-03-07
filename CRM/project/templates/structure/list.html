@@ -14,7 +14,7 @@
 							<table id="myDataTable" class="table table-striped table-bordered table-hover my-3">
 								<thead>
 									<tr>
-										<th>Code</th>
+										<th>Date de la dernière modification</th>
                                         <th>Dénomination</th>
                                         <th>Entité</th>
 										<th class="text-end">Actions</th>
@@ -23,7 +23,7 @@
 								<tbody>
                                     {% for structure in structures %}
                                     <tr>
-                                        <td>{{structure.code}}</td>
+										<td>{{structure.date_creation_rep}} </td>
                                         <td>{{structure.denomination}}</td>
                                         <td>{{structure.entite.denomination}} </td>
                                         <td class="text-end">

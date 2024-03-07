@@ -5,7 +5,6 @@ Author: codervent
 Email: codervent@gmail.com
 File: app.css
 */
-@import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700");
 
 body {
 	font-size: 14px;
@@ -13,7 +12,7 @@ body {
 	letter-spacing: .5px;
 	background: #f7f7ff;
 	overflow-x: hidden;
-	font-family:"Poppins";
+	font-family: "Itim", cursive;
 }
 .rounded-circle{
 	background-color:#010922 ;
@@ -36,7 +35,7 @@ a {
 	top: 0;
 	bottom: 0;
 	left: 0;
-	background-color:rgba(0, 0, 0, 0.89);
+	background-color:rgba(0, 0, 0, 0.795);
 	border-right: 0 solid #e4e4e4;
 	z-index: 11;
 	box-shadow: 0 2px 6px 0 rgb(218 218 253 / 65%), 0 2px 6px 0 rgb(206 206 238 / 54%)!important;
@@ -53,7 +52,7 @@ a {
 	bottom: 0;
 	padding: 0 15px;
 	z-index: 5;
-	
+	background-color:rgba(0, 0, 0, 0.795);
 	background-clip: padding-box;
 }
 
@@ -91,7 +90,15 @@ a {
 }
 
 .logo-icon {
-	margin-top: 5px;
+	width: 50px;
+}
+
+.logo-text {
+	font-size: 22px;
+	margin-left: 10px;
+	margin-bottom: 0;
+	letter-spacing: 1px;
+	color: #008cff
 }
 
 .toggle-icon {
@@ -936,9 +943,6 @@ a .page-link{
 	width: 42px
 }
 
-#invoice {
-	padding: 0
-}
 
 .invoice {
 	position: relative;
@@ -2677,4 +2681,20 @@ thead{
 
 .text-overflow{
 	overflow-wrap : break-word;
+}
+
+.dot {
+	height: 25px;
+	width: 25px;
+	border-radius: 50%;
+	display: inline-block;
+  }
+
+.signature{
+	margin-bottom: 200px !important;
+}
+
+.link-secure {
+	pointer-events: none;
+	cursor: pointer;
 }

@@ -19,6 +19,14 @@
                 <form id="form" name="myform" method="POST"  
                     class="form-horizontal bg-form row g-3">
                     {% csrf_token %}
+                    <div class="col-md-6">
+                        <label class="col-sm-12 col-form-label">Login *</label>
+                        <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-user'></i></span>
+                            <input type="text" class="form-control" name="login" id="inputLogin" 
+                                placeholder="Login" required/> 
+                        </div>
+                    </div>
+
                         <div class="col-md-6">
                             <label class="col-sm-12 col-form-label">Nom *</label>
                             <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bxs-user'></i></span>
@@ -44,25 +52,17 @@
 
                         <div class="col-md-6">
                             <label class="col-sm-12 col-form-label">Téléphone *</label>
-                            <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-phone-call' ></i></span>
+                               <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-phone-call' ></i></span>
                                 <input type="text" class="form-control" name="telephone" id="inputTelephone" 
                                 placeholder="21XXXXXX" required/>
                             </div>
                         </div>
 
-                        <div class="col-md-6 mx-auto">
+                        <div class="col-md-6">
                             <label class="col-sm-12 col-form-label">Adresse *</label>
                             <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-location-plus' ></i></span>
                                 <input type="text" class="form-control" name="adresse" id="inputAdresse" 
                                 placeholder="Cotonou" required/>
-                            </div>
-                        </div>
-
-                        <br>
-                        <div class="col-md-6">
-                            <label class="col-sm-12 col-form-label">Date de naissance *</label>
-                            <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bxs-calendar' ></i></span>
-                                <input type="date" name="date_naissance" class="form-control" id="inputDateNaissance" placeholder="JJ/MM/AAAA" required max="{{max_date}}">
                             </div>
                         </div>
 

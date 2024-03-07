@@ -14,24 +14,24 @@
 							<table id="myDataTable" class="table table-striped table-bordered table-hover my-3">
 								<thead>
 									<tr>
-										<th>Code</th>
-                                        <th>Photo</th>
+										<th>Date de la dernière modification</th>
                                         <th>Intitulé</th>
 										<th>Montant</th>
                                         <th>Structure</th>
                                         <th>Entité</th>
+										<th>Couleur</th>
 										<th class="text-end">Actions</th>
 									</tr>
 								</thead>
 								<tbody>
                                     {% for service in services %}
                                     <tr>
-                                        <td>{{service.code}}</td>
-                                        <td><img src="{{service.photo.url}}" class="product-img-2" alt="service {{service.intitule}}"></td>
+										<td>{{service.date_creation_rep}} </td>
                                         <td>{{service.intitule}}</td>
-										<td class="text-center">{{service.montant}} </td>
+										<td class="text-center">{{service.montant}} (Francs CFA)</td>
                                         <td>{{service.structure.denomination}} </td>
                                         <td>{{service.structure.entite.denomination}}</td>
+										<td class="text-center"><span class="dot" style="background-color: {{service.couleur}};"></span> </td>
                                         <td class="text-end">
                                             <a href="/service/edit/{{service.id}}">
                                             <button data-elt-id=""

@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Recherche demande {% endblock %}
+
+{% block body %}
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>LISTE DES DEMANDES formulées par autrui</h6>
+
+				
+				<div class="card">
+					<div class="card-body">
+						<div class="table-responsive">
+							<table id="myDataTable" class="table table-striped table-bordered table-hover my-3">
+								<thead>
+									<tr>
+                                        <th>Date dernière modif.</th>
+										<th>Client</th>
+                                        <th>Dénomination</th>
+										<th>Commentaire</th>
+                                        <th>Entité</th>
+										<th class="text-end">Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+                                    {%if demandes %}
+                                    {% for demande in demandes %}
+                                    <tr>
+                                        <td>{{demande.date_creation}} </td>
+										<td>{{demande.client.nom}} {{demande.client.prenom}}</td>
+                                        <td>{{demande.service.intitule}}</td>
+										<td>{{demande.observations}} </td>
+                                        <td>{{demande.service.structure.entite.denomination}} </td>
+										
+                                        <td class="text-end">
+												<button class="btn btn-sm btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#viewDemande{{demande.id}}"
+												title="voir" >
+												<span class="lni lni-eye"></span>
+												</button>
+												<a href="/demande/focus/{{demande.id}}">
+													<button class="btn btn-sm btn-success" type="button" 
+													title="suivre" >
+													<span class="lni lni-play"></span>
+													</button>
+												</a>
+                                            
+											<div class="modal fade" id="viewDemande{{demande.id}}" tabindex="-1" aria-hidden="true">
+												<div class="modal-dialog modal-dialog-scrollable">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title">Options supplémentaires</h5>
+															<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+														<div class="modal-body text-start">
+															{%if demande.optionsSupplementaires.count == 0%}
+															Pas d'option supplémentaires
+															{%else%}
+															{%for opt in demande.optionsSupplementaires%}
+															<li>{{opt.option_supplementaire.libelle}} --> {{opt.montantOpt}} CFA </li>
+															{%endfor%}
+															{%endif%}
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="modal fade col-5" id="deleteDemande{{demande.id}}" aria-labelledby="#exampleScrollableModal" tabindex="-1" aria-hidden="true">
+												<div class="modal-dialog modal-dialog-scrollable">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" id="exampleScrollableModal">Confirmation</h5>
+															<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+														<div class="modal-body text-center">La suppression de cette demande est irréversible.</div>
+														<div class="modal-footer">
+															<a href="/demande/delete/{{demande.id}}">
+																<button type="button" class="btn btn-danger">Continuer</button>
+															</a>
+															<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+														</div>
+													</div>
+												</div>
+											</div>
+                                        </td>
+                                    </tr>  
+                                    {%endfor%}
+                                    {%endif%} 
+                                </tbody>
+							</table>
+						</div>
+                        <div class="form-group text-center">
+                            <a href="/demande/other" class="btn btn-light border" type="button" id="fermer">Fermer
+                            </a>
+                        </div>
+					</div>
+				</div>
+{% endblock %}

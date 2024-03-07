@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Liste des clients {% endblock %}
+
+{% block body %}
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>LISTE DES CLIENTS</h6>
+
+				
+				<div class="card">
+					<div class="card-body">
+						<div class="table-responsive">
+							<table id="myDataTable" class="table table-striped table-bordered table-hover my-3">
+								<thead>
+									<tr>
+                                        <th>Date de la dernière modification</th>
+                                        <th>Code client</th>
+										<th>Nom</th>
+										<th>Prenom</th>
+                                        <th>Date de naissance</th>
+										<th class="text-end">Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+                                    {% for client in clients %}
+                                    <tr>
+                                        <td>{{client.date_creation_rep}} </td>
+                                        <td>{{client.code}}</td>
+                                        <td>{{client.nom}}</td>
+                                        <td>{{client.prenom}}</td>
+                                        <td>{{client.date_naissance}}</td>
+                                        <td class="text-end">
+                                            <a href="/client/edit/{{client.id}}">
+                                            <button data-elt-id=""
+											class="btn btn-sm btn-edit" type="button"
+											id="modifier" title="modifier" >
+											  <span class="bx bx-pencil"></span>
+											</button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+{% endblock %}

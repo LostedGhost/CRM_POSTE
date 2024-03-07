@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Réaffectation de chef d'agence {% endblock %}
+
+{% block body %}
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>AFFECTATION De chef d'agence OU MODIFICATION DU MOT DE PASSE</h6>
+
+<div class="div-center">
+    <div class="card mt-4 col-md-10 div-center">
+        <div class="card-body">
+            <div class="border p-4 rounded">
+                <div class="card-title d-flex align-items-center">
+                    <div>
+                        <i class="bx bxs-bookmark  me-1 font-22 text-blue-sewar"></i>
+                    </div>
+                    <h5 class="mb-0 text-blue-sewar">Informations Générales</h5>
+                </div>
+                <hr />
+                <form id="form" name="myform" method="POST"  
+                    class="form-horizontal bg-form row g-3">
+                    {% csrf_token %}
+                    <div class="form-check col-md-6 my-auto">
+                        <input class="form-check-input" type="checkbox" name="regeneratePass" id="regePass" value="True">
+                        <label class="form-check-label" for="regePass">Regénérer un nouveau mot de passe ?</label>
+                    </div>
+
+                        <div class="col-md-6 mx-auto">
+                            <label class="col-sm-12 col-form-label">Agence *</label>
+                            <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-building' ></i></span>
+                                <select name="agence" id="inputSite" class="form-control single-select" required>
+                                    <option value="">Sélectionnez une agence</option>
+                                    {%for agence in agences%}
+                                    {%if agent.agence.code == agence.code%}
+                                    <option value="{{agence.code}}" selected>{{agence.intitule}}</option>
+                                    {%else%}
+                                    <option value="{{agence.code}}">{{agence.intitule}}</option>
+                                    {%endif%}
+                                    {%endfor%}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group text-center">
+                            <button class="btn btn-blue-s mr-2" type="submit" id="enregistrer" 
+                            > Enregistrer
+                            </button >
+                            <a href="/agence-leader/list" class="btn btn-light border" type="button" id="fermer">Fermer
+                            </a>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

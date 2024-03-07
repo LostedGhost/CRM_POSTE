@@ -19,7 +19,9 @@
 	<script src="{% static 'assets-admin/js/pace.min.js' %}"></script>
 	<!-- Bootstrap CSS -->
 	<link href="{% static 'assets-admin/css/bootstrap.min.css' %}" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
 	<link href="{% static 'assets-admin/css/app.css' %}" rel="stylesheet">
 	<link href="{% static 'assets-admin/css/icons.css' %}" rel="stylesheet">
 	<!-- Theme Style CSS -->
@@ -29,6 +31,7 @@
     <link href="{% static 'assets-admin/plugins/datatable/css/dataTables.bootstrap5.min.css' %}" rel="stylesheet" />
 	<link href="{% static 'assets-admin/plugins/select2/css/select2.min.css' %}" rel="stylesheet" />
 	<link href="{% static 'assets-admin/plugins/select2/css/select2-bootstrap4.css' %}" rel="stylesheet" />
+	<link href="{% static 'assets-admin/plugins/highcharts/css/highcharts.css' %}" rel="stylesheet" />
 	<title>
     {% block title %}
     {% endblock %}
@@ -43,14 +46,17 @@
 		<!--sidebar wrapper -->
 		<div class="sidebar-wrapper" data-simplebar="true">
 			<div class="sidebar-header">
-				<div id="imag-logo">
-					<img src="{% static 'assets-admin/images/official_logo.png' %}" class="logo-icon reduce-icon" alt="logo icon">
+				<div>
+					<img src="{% static 'assets-admin/images/official_logo.png' %}" class="logo-icon" alt="logo icon">
+				</div>
+				<div>
+					<h4 class="logo-text">CRM-Poste</h4>
 				</div>
 				<div class="toggle-icon ms-auto bold"><i class='lni lni-list'></i>
 				</div>
 			</div>
 			<!--navigation-->
-            {%if utilisateur.profil.libelle == "ADMIN"%}
+            {%if utilisateur.profil.id == 1%}
 			<ul class="metismenu" id="menu">
 				<li>
 					<a href="javascript:;" class="has-arrow">
@@ -84,6 +90,20 @@
 								</li>
 							</ul>
 						</li>
+
+						<li>
+							<a class="has-arrow" href="javascript:;">
+								<div class="parent-icon"><i class="bx bx-user-pin"></i>
+								</div>
+								<div class="menu-title">Chef d'agence</div>
+							</a>
+							<ul>
+								<li> <a href="/agence-leader/list"><i class="bx bx-list-ol"></i>Liste</a>
+								</li>
+								<li> <a href="/agence-leader/add"><i class="bx bx-plus"></i>Ajout</a>
+								</li>
+							</ul>
+						</li>
 		
 						<li>
 							<a class="has-arrow" href="javascript:;">
@@ -95,8 +115,6 @@
 								<li> <a href="/agents/list"><i class="bx bx-list-ul"></i>Liste</a>
 								</li>
 								<li> <a href="/agents/add"><i class="bx bx-user-plus"></i>Ajout d'agent</a>
-								</li>
-								<li> <a href="/agents/addMany"><i class="bx bx-user-plus"></i>Chargement d'agents</a>
 								</li>
 							</ul>
 						</li>
@@ -158,8 +176,44 @@
 						</li>
 					</ul>
 				</li>
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class='bx bx-comment-detail'></i>
+						</div>
+						<div class="menu-title">Historique demande</div>
+					</a>
+					<ul>
+						<li> <a href="/historique/demande"><i class="bx bx-right-arrow-alt"></i>Système</a>
+						</li>
+					</ul>
+					<ul>
+						<!-- href="/historique/agence-agent" -->
+						<li> <a href="/historique/agence-agent"><i class="bx bx-right-arrow-alt"></i>Agence ou Agent</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="/historique/clients">
+						<div class="parent-icon"> <i class="bx bx-user-check"></i>
+						</div>
+						<div class="menu-title">Historique client</div>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class='bx bx-stats'></i>
+						</div>
+						<div class="menu-title">Statistique</div>
+					</a>
+					<ul>
+						<li> <a href="/statistique/agence-agent"><i class="bx bx-right-arrow-alt"></i>Système</a>
+						</li>
+					</ul>
+				</li>
+				
 			</ul>
-            {%else%}
+            {%endif%}
+			{%if utilisateur.profil.id == 2%}
             <ul class="metismenu" id="menu">
 				<li>
 					<a href="javascript:;" class="has-arrow">
@@ -182,7 +236,9 @@
 					<ul>
                         <li> <a href="/demande/list"><i class="bx bx-list-ol"></i>Liste</a>
 						</li>
-                        <li> <a href="/demande/add"><i class="bx bx-plus"></i>Ajout</a>
+						<li> <a href="/demande/add_new"><i class="bx bx-user-plus"></i>Nouveau client</a>
+						</li>
+						<li> <a href="/demande/add_old"><i class="bx bx-user-x"></i>Ancien client</a>
 						</li>
 						<li>
 							<a href="/demande/other">
@@ -191,9 +247,37 @@
 						</li>
 					</ul>
 				</li>
+				<li>
+					<a class="has-arrow" href="javascript:;">
+						<div class="parent-icon"><i class="bx bx-user-check"></i>
+						</div>
+						<div class="menu-title">Client</div>
+					</a>
+					<ul>
+                        <li> <a href="/client/list"><i class="bx bx-list-ol"></i>Liste</a>
+						</li>
+					</ul>
+				</li>
 				
 			</ul>
-            {%endif%}
+			{%endif%}
+			{%if utilisateur.profil.id == 3%}
+			<ul class="metismenu" id="menu">
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class='bx bx-home-circle'></i>
+						</div>
+						<div class="menu-title">Dashboard</div>
+					</a>
+					<ul>
+						<li> <a href="/"><i class="bx bx-right-arrow-alt"></i>Acceuil</a>
+						</li>
+					</ul>
+				</li>
+				<li class="menu-label">VALIDATION</li>
+				
+			</ul>
+			{%endif%}
 			<!--end navigation-->
 		</div>
 		<!--end sidebar wrapper -->
@@ -545,11 +629,32 @@
 		<div class="page-wrapper">
 			<div class="page-content">
                 {% if error %}
-                    <div class="alert alert-danger border-0 bg-danger alert-dismissible fade show">
-                        <div class="text-white">{{error}}</div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+				<div class="alert alert-danger border-0 bg-danger alert-dismissible fade show py-2">
+					<div class="d-flex align-items-center">
+						<div class="font-35 text-white"><i class='bx bxs-message-square-x'></i>
+						</div>
+						<div class="ms-3">
+							<h6 class="mb-0 text-white">Erreur </h6>
+							<div class="text-white">{{error}}</div>
+						</div>
+					</div>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
                 {% endif %}
+				
+				{% if success %}
+				<div class="alert alert-success border-0 bg-success alert-dismissible fade show py-2">
+					<div class="d-flex align-items-center">
+						<div class="font-35 text-white"><i class='bx bxs-check-circle'></i>
+						</div>
+						<div class="ms-3">
+							<h6 class="mb-0 text-white">Succès</h6>
+							<div class="text-white">{{success}}</div>
+						</div>
+					</div>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+				{%endif%}
 
                 {% block body %}
 
@@ -560,6 +665,27 @@
 
 		<!--end page wrapper -->
         {% block footer %}
+		<div class="col">
+			<!-- Button trigger modal -->
+			
+			<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-scrollable">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Récapitulatif</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body" id="recap">
+							
+						</div>
+						<div class="modal-footer">
+							<button id="valider" class="btn btn-primary">Valider</button>
+    						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<!--start overlay-->
 		<div class="overlay toggle-icon"></div>
 		<!--end overlay-->
@@ -626,7 +752,41 @@
 			$('#image-uploadify').imageuploadify();
 		})
 	</script>
+	<script>
+		$(function () {
+			"use strict";
+			var donnees = {{ donnees|safe }};
+			console.log(donnees.valeurs);
+			var options = {
+				series: donnees.valeurs,
+				chart: {
+					foreColor: '#9ba7b2',
+					height: 330,
+					type: 'pie',
+				},
+				colors: donnees.couleurs,
+				labels: donnees.noms,
+				responsive: [{
+					breakpoint: 480,
+					options: {
+						chart: {
+							height: 360
+						},
+						legend: {
+							position: 'bottom'
+						}
+					}
+				}]
+			};
+			var chart = new ApexCharts(document.querySelector("#stat1"), options);
+			chart.render();
+		});
+	</script>
+	<script src="{% static 'assets-admin/plugins/apexcharts-bundle/js/apexcharts.min.js' %}"></script>
+	<script src="{% static 'assets-admin/plugins/highcharts/js/highcharts.js' %}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{% static 'assets-admin/js/app.js' %}"></script>
+	<script src="{% static 'assets-admin/js/python.js' %}"></script>
 </body>
 
 </html>

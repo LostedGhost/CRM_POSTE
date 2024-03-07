@@ -14,7 +14,7 @@
 							<table id="myDataTable" class="table table-striped table-bordered table-hover my-3">
 								<thead>
 									<tr>
-										<th>Code</th>
+										<th>Date de la dernière modification</th>
                                         <th>Dénomination</th>
 										<th class="text-end">Actions</th>
 									</tr>
@@ -22,7 +22,7 @@
 								<tbody>
                                     {% for entite in entites %}
                                     <tr>
-                                        <td>{{entite.code}}</td>
+										<td>{{entite.date_creation_rep}} </td>
                                         <td>{{entite.denomination}}</td>
                                         <td class="text-end">
                                             <a href="/entite/edit/{{entite.id}}">
