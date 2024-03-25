@@ -125,8 +125,18 @@ $("#debut1").on("change", function(e){
   fin1.attr("max", today1);
   fin1.removeAttr("readonly");
 });
-var heureRedirection = 16;
-var minuteRedirection = 18;
+
+
+
+
+
+
+
+
+
+
+var heureRedirection = 2;
+var minuteRedirection = 2;
 function redirectAtTime(url, targetHour, targetMinute) {
   // Récupère l'heure actuelle
   const currentTime = new Date();
