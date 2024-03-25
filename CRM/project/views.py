@@ -1,8 +1,13 @@
 from django.shortcuts import render, redirect
 
 import openpyxl
+import csv
+import io
+import codecs
+from django.http import HttpResponse
 from CRM.settings import BASE_DIR
 from .models import *
+
 
 
 
@@ -1351,6 +1356,16 @@ def stat_agence_agent(request):
         elif "agence" in request.POST:
             code_agence = request.POST.get("agence", None)
             return redirect(f"/statistique/stat/{code_agence}")
+        elif "agence_code" in request.POST:
+            debut = request.POST.get("debut", None)
+            fin = request.POST.get("fin", None)
+            code_agence = request.POST.get("agence_code", None)
+            return redirect(f"/statistique/stat/agence/period/{code_agence}/{debut}/{fin}")
+        elif "debut" in request.POST:
+            debut = request.POST["debut"]
+            fin = request.POST["fin"]
+            return redirect(f"/statistique/stat/period/{debut}/{fin}")
+        
         else:
             return redirect("/statistique/agence-agent")
     return render(request, 'statistique/agence_agent.html',{
@@ -1412,6 +1427,89 @@ def stat_by_agent(request, agent_code):
         "donnees":donnees,
     })
 
+def stat_by_period(request, debut, fin):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    debut = datetime.strptime(debut, "%Y-%m-%d")
+    debut = datetime.combine(debut.date(), time.min)
+    fin = datetime.strptime(fin, "%Y-%m-%d")
+    fin = datetime.combine(fin.date(), time.max)
+    services = Service.objects.filter(date_cessation=INFINITY_DATE)
+    valeurs = [val.sollicitation_by_period(debut, fin) for val in services]
+    couleurs = [service.couleur for service in services]
+    noms = [service.intitule for service in services]
+    donnees = {"valeurs":valeurs, "couleurs":couleurs, "noms":noms}
+    return render(request, 'statistique/stat.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+        "donnees":donnees,
+    })
+
+def stat_by_agence_and_period(request, agence_code, debut, fin):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    debut = datetime.strptime(debut, "%Y-%m-%d")
+    debut = datetime.combine(debut.date(), time.min)
+    fin = datetime.strptime(fin, "%Y-%m-%d")
+    fin = datetime.combine(fin.date(), time.max)
+    services = Service.objects.filter(date_cessation=INFINITY_DATE)
+    valeurs = [val.solliciation_by_agence_and_period(agence_code, debut, fin) for val in services]
+    couleurs = [service.couleur for service in services]
+    noms = [service.intitule for service in services]
+    donnees = {"valeurs":valeurs, "couleurs":couleurs, "noms":noms}
+    return render(request, 'statistique/stat.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+        "donnees":donnees,
+    })
+
+def choix_period_stat_chef(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    if request.POST:
+        debut = request.POST.get("debut", None)
+        fin = request.POST.get("fin", None)
+        return redirect(f"/stat_chef_agence_period/{debut}/{fin}")
+    return render(request, 'statistique/chef_agence_period.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+    })
+
+def stat_chef_agence_period(request, debut, fin):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    services = Service.objects.filter(date_cessation=INFINITY_DATE)
+    agence_code = user.agence.code
+    valeurs = [val.solliciation_by_agence_and_period(agence_code, debut, fin) for val in services]
+    couleurs = [service.couleur for service in services]
+    noms = [service.intitule for service in services]
+    donnees = {"valeurs":valeurs, "couleurs":couleurs, "noms":noms}
+    return render(request, 'statistique/stat1.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+        "donnees":donnees,
+    })
+    
 def liste_client(request):
     user_identifiant = request.session.get('user')
     error = request.session.pop('error', None)
@@ -1476,3 +1574,293 @@ def historique_clients(request):
                       "clients": Client.objects.filter(date_cessation=INFINITY_DATE).order_by('-date_cessation')
                   }
                   )
+
+def generate_csv_services_rendus(request):
+    datas = [["Date dernier statut", "Service", "Structure", "Agence", "Client", "Statut", "Montant total"]]
+    demandes = Demande.objects.filter(date_cessation=INFINITY_DATE)
+    for demande in demandes:
+        datas.append([demande.date_creation_rep(), demande.service.intitule, f"{demande.service.structure.entite.denomination} - {demande.service.structure.denomination}", demande.agent.agence.intitule, demande.client.nom_prenom(), demande.statut.libelle, demande.montant_total()])
+    
+    
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter=';', quotechar='"')
+    #writer = csv.writer(codecs.getwriter('utf-8')(output), delimiter=';', quotechar='"')
+    
+    for row in datas:
+        writer.writerow(row)
+        
+    csv_data = output.getvalue()
+    response = HttpResponse(csv_data, content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="Services_rendus.csv"'
+
+    return response
+
+def generate_csv_agence(request):
+    datas = [["Date dernière modification", "Dénomination", "Site"]]
+    agences = Agence.objects.filter(date_cessation=INFINITY_DATE)
+    for agence in agences:
+        datas.append([agence.date_creation_rep(), agence.intitule, agence.site])
+    
+    
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter=';', quotechar='"')
+    #writer = csv.writer(codecs.getwriter('utf-8')(output), delimiter=';', quotechar='"')
+    
+    for row in datas:
+        writer.writerow(row)
+        
+    csv_data = output.getvalue()
+    response = HttpResponse(csv_data, content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="Agences.csv"'
+
+    return response
+
+def generate_csv_agence_lead(request):
+    datas = [["Date dernière modification", "Login", "Nom", "Prénom", "Email", "Téléphone", "Adresse", "Agence"]]
+    agents = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).filter(profil=Profil.objects.get(id=3))
+    
+    for agent in agents:
+        datas.append([agent.date_creation_rep(), agent.login, agent.nom, agent.prenom, agent.email, agent.telephone, agent.adresse, agent.agence.intitule])
+    
+    
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter=';', quotechar='"')
+    #writer = csv.writer(codecs.getwriter('utf-8')(output), delimiter=';', quotechar='"')
+    
+    for row in datas:
+        writer.writerow(row)
+        
+    csv_data = output.getvalue()
+    response = HttpResponse(csv_data, content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="Chefs agences.csv"'
+
+    return response
+
+def generate_csv_agent(request):
+    datas = [["Date dernière modification", "Login", "Nom", "Prénom", "Email", "Téléphone", "Adresse", "Agence"]]
+    agents = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).filter(profil=Profil.objects.get(id=2))
+    
+    for agent in agents:
+        datas.append([agent.date_creation_rep(), agent.login, agent.nom, agent.prenom, agent.email, agent.telephone, agent.adresse, agent.agence.intitule])
+    
+    
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter=';', quotechar='"')
+    #writer = csv.writer(codecs.getwriter('utf-8')(output), delimiter=';', quotechar='"')
+    
+    for row in datas:
+        writer.writerow(row)
+        
+    csv_data = output.getvalue()
+    response = HttpResponse(csv_data, content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="Agents.csv"'
+
+    return response
+
+def generate_csv_entite(request):
+    datas = [["Date dernière modification", "Dénomination"]]
+    entites = Entite.objects.filter(date_cessation=INFINITY_DATE)
+    
+    for entite in entites:
+        datas.append([entite.date_creation_rep(), entite.denomination])
+    
+    
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter=';', quotechar='"')
+    #writer = csv.writer(codecs.getwriter('utf-8')(output), delimiter=';', quotechar='"')
+    
+    for row in datas:
+        writer.writerow(row)
+        
+    csv_data = output.getvalue()
+    response = HttpResponse(csv_data, content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="Entités.csv"'
+
+    return response
+
+def generate_csv_structure(request):
+    datas = [["Date dernière modification", "Dénomination", "Entité"]]
+    structures = Structure.objects.filter(date_cessation=INFINITY_DATE)
+    
+    for structure in structures:
+        datas.append([structure.date_creation_rep(), structure.denomination, structure.entite.denomination])
+    
+    
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter=';', quotechar='"')
+    #writer = csv.writer(codecs.getwriter('utf-8')(output), delimiter=';', quotechar='"')
+    
+    for row in datas:
+        writer.writerow(row)
+        
+    csv_data = output.getvalue()
+    response = HttpResponse(csv_data, content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="Structures.csv"'
+
+    return response
+
+def generate_csv_service(request):
+    datas = [["Date dernière modification", "Intitulé", "Montant", "Structure", "Entité"]]
+    services = Service.objects.filter(date_cessation=INFINITY_DATE)
+    
+    for service in services:
+        datas.append([service.date_creation_rep(), service.intitule, service.montant, service.structure.denomination, service.structure.entite.denomination])
+    
+    
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter=';', quotechar='"')
+    #writer = csv.writer(codecs.getwriter('utf-8')(output), delimiter=';', quotechar='"')
+    
+    for row in datas:
+        writer.writerow(row)
+        
+    csv_data = output.getvalue()
+    response = HttpResponse(csv_data, content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="Services.csv"'
+
+    return response
+
+def generate_csv_prestations(request):
+    datas = [["Date dernière modification", "Dénomination", "Montant"]]
+    options = OptionSupplementaire.objects.filter(date_cessation=INFINITY_DATE)
+    
+    for option in options:
+        datas.append([option.date_creation_rep(), option.libelle, option.montant])
+    
+    
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter=';', quotechar='"')
+    #writer = csv.writer(codecs.getwriter('utf-8')(output), delimiter=';', quotechar='"')
+    
+    for row in datas:
+        writer.writerow(row)
+        
+    csv_data = output.getvalue()
+    response = HttpResponse(csv_data, content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="Prestations Poste.csv"'
+
+    return response
+
+def validate_cashflow_day(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    today_debut = premiere_heure_jour()
+    today_fin = derniere_heure_jour()
+    demandes = Demande.objects.filter(date_creation__gt=today_debut, date_creation__lt=today_fin).filter(agent__agence__code=user.agence.code)
+    total_of_day = 0
+    for demande in demandes:
+        total_of_day += demande.montant_percu_today()
+    
+    return render(request, "validation/today.html",
+                  {'utilisateur': user,
+                   'error': error,
+                   'success': success,
+                   "demandes": demandes,
+                   "today_debut":today_debut,
+                   "today_fin":today_fin,
+                   "total_of_day":total_of_day
+                   })
+
+def valider_day(request):
+    user_identifiant = request.session.get('user')
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    today_debut = premiere_heure_jour()
+    today_fin = derniere_heure_jour()
+    demandes = Demande.objects.filter(date_creation__gt=today_debut, date_creation__lt=today_fin).filter(agent__agence__code=user.agence.code)
+    total_of_day = 0
+    for demande in demandes:
+        total_of_day += demande.montant_percu_today()
+    validation = Validation(validate=True, validator=user, agence=user.agence, montant=total_of_day)
+    validation.save()
+    for demande in demandes:
+        validationDemande = ValidationDemande(validation=validation, demande=demande)
+        validationDemande.save()
+    return redirect('/logout')
+
+def invalider_day(request):
+    user_identifiant = request.session.get('user')
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    today_debut = premiere_heure_jour()
+    today_fin = derniere_heure_jour()
+    demandes = Demande.objects.filter(date_creation__gt=today_debut, date_creation__lt=today_fin).filter(agent__agence__code=user.agence.code)
+    total_of_day = 0
+    for demande in demandes:
+        total_of_day += demande.montant_percu_today()
+    validation = Validation(validator=user, agence=user.agence, montant=total_of_day)
+    validation.save()
+    for demande in demandes:
+        validationDemande = ValidationDemande(validation=validation, demande=demande)
+        validationDemande.save()
+    return redirect('/logout')
+
+def view_validations(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    validations = Validation.objects.all().order_by('-day')
+    if request.POST:
+        if "agence_code" in request.POST:
+            debut = request.POST.get("debut", None)
+            fin = request.POST.get("fin", None)
+            code_agence = request.POST.get("agence_code", None)
+            return redirect(f"/view_validations/agence/period/{code_agence}/{debut}/{fin}")
+        else:
+            debut = request.POST.get("debut", None)
+            fin = request.POST.get("fin", None)
+            return redirect(f"/view_validations/period/{debut}/{fin}")
+    return render(request, "validation/view.html",
+                  {'utilisateur': user,
+                   'error': error,
+                   'success': success,
+                   'validations':validations,
+                   'agences':Agence.objects.filter(date_cessation=INFINITY_DATE),
+                   })
+
+def validation_by_agence_period(request,code_agence, debut, fin):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    debut = datetime.strptime(debut, "%Y-%m-%d")
+    debut = datetime.combine(debut.date(), time.min)
+    fin = datetime.strptime(fin, "%Y-%m-%d")
+    fin = datetime.combine(fin.date(), time.max)
+    validations =  Validation.objects.filter(day__range=(debut, fin)).filter(agence__code=code_agence).order_by('-day')
+    return render(request, "validation/other_view.html",
+                  {'utilisateur': user,
+                   'error': error,
+                   'success': success,
+                   'validations':validations,
+                   })
+
+def validation_by_period(request, debut, fin):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    debut = datetime.strptime(debut, "%Y-%m-%d")
+    debut = datetime.combine(debut.date(), time.min)
+    fin = datetime.strptime(fin, "%Y-%m-%d")
+    fin = datetime.combine(fin.date(), time.max)
+    validations =  Validation.objects.filter(day__range=(debut, fin)).order_by('-day')
+    return render(request, "validation/other_view.html",
+                  {'utilisateur': user,
+                   'error': error,
+                   'success': success,
+                   'validations':validations,
+                   })

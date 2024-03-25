@@ -89,6 +89,9 @@ class Utilisateur(BaseEntity):
     is_active = models.BooleanField(default=False)
     can_connect = models.BooleanField(default=True)
     
+    def nom_prenom(self):
+        return f"{self.nom} {self.prenom}"
+    
     def generate_login():
         c = generate_random("USER@")
         while True:
@@ -190,6 +193,18 @@ class Service(BaseEntity):
                 s += 1
         return s
     
+    def sollicitation_by_period(self, date_debut, date_fin):
+        s = 0
+        for d in Demande.objects.filter(date_cessation=INFINITY_DATE).filter(service=self).filter(date_creation__range=(date_debut, date_fin)):
+            s += 1
+        return s
+    
+    def solliciation_by_agence_and_period(self, agence_code, date_debut, date_fin):
+        s = 0
+        for d in Demande.objects.filter(date_cessation=INFINITY_DATE).filter(service=self).filter(agent__agence__code=agence_code).filter(date_creation__range=(date_debut, date_fin)):
+            s += 1
+        return s
+    
     def real_number():
         return Service.objects.all().values_list('code', flat=True).distinct().count()
 
@@ -214,6 +229,9 @@ class Client(BaseEntity):
         birthdate=""
         birthdate+=str(self.date_naissance.year)+"-"+'{:02d}'.format(self.date_naissance.month)+"-"+'{:02d}'.format(self.date_naissance.day)
         return birthdate
+    
+    def nom_prenom(self):
+        return f"{self.nom} {self.prenom}"
     
     
 
@@ -245,6 +263,17 @@ class Demande(BaseEntity):
     
     def optionsSupplementaires(self):
         return OptionSupplementaireDemande.objects.filter(demande=self)
+    
+    def optionsSupplementaires_today(self):
+        return OptionSupplementaireDemande.objects.filter(demande=self).filter(date_creation__gt=premiere_heure_jour(), date_creation__lt=derniere_heure_jour())
+    
+    def montant_percu_today(self):
+        optSup = self.optionsSupplementaires_today()
+        montant = 0
+        for op in optSup:
+            montant += op.montantOpt()
+        return montant
+    
     
     def montant_percu(self):
         optSup = self.optionsSupplementaires()
@@ -333,3 +362,19 @@ class OptionSupplementaireDemande(BaseEntity):
     
     def real_number():
         return OptionSupplementaireDemande.objects.all().values_list('code', flat=True).distinct().count()
+
+class Validation(models.Model):
+    id = models.AutoField(primary_key=True, auto_created=True)
+    day = models.DateTimeField(auto_now_add=True)
+    validate = models.BooleanField(default=False)
+    validator = models.ForeignKey(Utilisateur, related_name='validators',on_delete=models.CASCADE, default=None)
+    agence = models.ForeignKey(Agence, on_delete=models.CASCADE, default=None)
+    montant = models.IntegerField(null=True)
+    
+    def montant_validation(self):
+        pass
+
+class ValidationDemande(models.Model):
+    id = models.AutoField(primary_key=True, auto_created=True)
+    validation = models.ForeignKey(Validation, related_name='validations', on_delete=models.CASCADE, default=None)
+    demande = models.ForeignKey(Demande, on_delete=models.CASCADE, default=None)

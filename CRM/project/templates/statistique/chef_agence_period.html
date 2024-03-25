@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Liste des demandes formulées par autrui {% endblock %}
+
+{% block body %}
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>LISTE DES DEMANDES formulées par autrui</h6>
+
+				
+				<div class="card">
+					<div class="card-body">
+                        <form id="form3" name="myform" method="POST" 
+                                class="form-horizontal bg-form row g-3 mb-3" name="PERIOD">
+                                {% csrf_token %}
+                                <div class="card-title d-flex align-items-center">
+                                    <div>
+                                        <i class="bx bx-search  me-1 font-22 text-blue-sewar"></i>
+                                    </div>
+                                    <h5 class="mb-0 text-blue-sewar text-uppercase">historique par période</h5>
+                                </div>
+                                <hr />
+                                <div class="col-md-6 mx-auto">
+                                    <div class="row">
+                                        <div class="mb-3 col-5">
+                                            <label class="form-label">Début:</label>
+                                            <input type="date" class="form-control" id="debut" name="debut">
+                                        </div>
+                                        <div class="mb-3 col-5">
+                                            <label class="form-label">Fin:</label>
+                                            <input type="date" class="form-control" id="fin" readonly name="fin">
+                                        </div>
+                                        <button class="btn col-2" type="submit"
+                                        > <span class=""><i class='bx bx-search' ></i></span>
+                                        </button >
+                                    </div>
+                                </div>
+                        </form>
+					</div>
+				</div>
+{% endblock %}

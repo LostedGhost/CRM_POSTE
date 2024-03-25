@@ -9,7 +9,7 @@
 				<div class="card">
 					<div class="card-body">
                         <div class="col">
-                            <h6 class="mb-0 text-uppercase">Sollicitation des services</h6>
+                            <h6 class="mb-0 text-uppercase">Sollicitation globale des services</h6>
                             <hr/>
                             <div class="card mx-auto">
                                 <div class="card-body">
@@ -22,6 +22,8 @@
                             <option value="">Sélectionnez une option pour l'affichage des statistiques</option>
                             <option value="form1">Par agence</option>
                             <option value="form2">Par agent</option>
+                            <option value="form3">Par période</option>
+                            <option value="form4">Par agence et par période</option>
                         </select>
                         
                         <form id="form1" name="myform" method="POST" hidden 
@@ -77,6 +79,64 @@
                                     </div>
                                 </div>
 
+                        </form>
+                        <form id="form3" name="myform" method="POST" hidden 
+                                class="form-horizontal bg-form row g-3 mb-3" name="PERIOD">
+                                {% csrf_token %}
+                                <div class="card-title d-flex align-items-center">
+                                    <div>
+                                        <i class="bx bx-search  me-1 font-22 text-blue-sewar"></i>
+                                    </div>
+                                    <h5 class="mb-0 text-blue-sewar text-uppercase">historique par période</h5>
+                                </div>
+                                <hr />
+                                <div class="col-md-6 mx-auto">
+                                    <div class="row">
+                                        <div class="mb-3 col-5">
+                                            <label class="form-label">Début:</label>
+                                            <input type="date" class="form-control" id="debut" name="debut">
+                                        </div>
+                                        <div class="mb-3 col-5">
+                                            <label class="form-label">Fin:</label>
+                                            <input type="date" class="form-control" id="fin" readonly name="fin">
+                                        </div>
+                                        <button class="btn col-2" type="submit"
+                                        > <span class=""><i class='bx bx-search' ></i></span>
+                                        </button >
+                                    </div>
+                                </div>
+                        </form>
+                        <form id="form4" name="myform" method="POST" hidden 
+                                class="form-horizontal bg-form row g-3 mb-3" name="PERIOD_AGENCE">
+                                {% csrf_token %}
+                                <div class="card-title d-flex align-items-center">
+                                    <div>
+                                        <i class="bx bx-search  me-1 font-22 text-blue-sewar"></i>
+                                    </div>
+                                    <h5 class="mb-0 text-blue-sewar text-uppercase">historique par période</h5>
+                                </div>
+                                <hr />
+                                <div class="col-md-6 mx-auto">
+                                    <select name="agence_code" id="inputAgence" class="form-control single-select" required>
+                                        <option value="">Sélectionnez une agence</option>
+                                        {%for agence in agences%}
+                                        <option value="{{agence.code}}">{{agence.intitule}}</option>
+                                        {%endfor%}
+                                    </select>
+                                    <div class="row">
+                                        <div class="mb-3 col-5">
+                                            <label class="form-label">Début:</label>
+                                            <input type="date" class="form-control" id="debut1" name="debut">
+                                        </div>
+                                        <div class="mb-3 col-5">
+                                            <label class="form-label">Fin:</label>
+                                            <input type="date" class="form-control" id="fin1" readonly name="fin">
+                                        </div>
+                                        <button class="btn col-2" type="submit"
+                                        > <span class=""><i class='bx bx-search' ></i></span>
+                                        </button >
+                                    </div>
+                                </div>
                         </form>
 					</div>
 				</div>

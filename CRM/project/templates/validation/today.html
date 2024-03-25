@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Validation de la journée {% endblock %}
+
+{% block body %}
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>Validation de la journée</h6>
+
+<div class="div-center">
+    <div class="card mt-4 col-md-6 div-center">
+        <div class="card-body">
+                <table class="table mb-3 table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" >#</th>
+                            <th scope="col"> Client </th>
+                            <th scope="col">Montant perçu</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for demande in demandes%}
+                        <tr>
+                            <td> - </td>
+                            <td>{{demande.client.nom_prenom}} </td>
+                            <td>{{demande.montant_percu_today}} Francs CFA</td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+                <tfoot>
+                    <h1 class="text-uppercase">Total: {{total_of_day}} FCFA </h1>
+                </tfoot>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validerJournee">Valider</button>
+                <div class="modal fade" id="validerJournee" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Validation de la journée</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">Êtes-vous sûr de vouloir valider la journée ?</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <a href="/valider_day">
+                                    <button type="button" class="btn btn-primary">Oui</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#invaliderJournee">Rejeter</button>
+                <div class="modal fade" id="invaliderJournee" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Validation de la journée</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">Êtes-vous sûr de vouloir invalider la journée ?</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <a href="/invalider_day">
+                                    <button type="button" class="btn btn-danger">Oui</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

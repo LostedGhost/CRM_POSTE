@@ -22,12 +22,12 @@
                 {%for statut in statuts%}
                     {%if demande.statut.id >= statut.id %}
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="statut" id="statut{{statut.id}}" checked disabled value="{{statut.id}}">
+                        <input class="form-check-input" type="radio" name="statut" id="statut{{statut.id}}" checked disabled value="{{statut.id}}" data-name="{{statut.libelle}}">
                         <label class="form-check-label" for="flexRadioDisabled">{{statut.libelle}}</label>
                     </div>
                     {%else%}
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="statut" id="statut{{statut.id}}" value="{{statut.id}}">
+                        <input class="form-check-input" type="radio" name="statut" id="statut{{statut.id}}" value="{{statut.id}}" data-name="{{statut.libelle}}">
                         <label class="form-check-label" for="flexRadioDisabled">{{statut.libelle}}</label>
                     </div>
                     {%endif%}

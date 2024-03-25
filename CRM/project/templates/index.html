@@ -69,14 +69,14 @@
 
     </div>
     <div class="col">
-        <h6 class="mb-0 text-uppercase">Sollicitation des services</h6>
+        <h6 class="mb-0 text-uppercase">Sollicitation globale des services</h6>
         <hr/>
         <div class="card mx-auto">
             <div class="card-body">
                 <div id="stat1"></div>
             </div>
         </div>
-       </div>
+    </div>
 
     <div class="card col-12 radius-10">
             <div class="card-body">
@@ -85,6 +85,13 @@
                         <h6 class="mb-0 text-uppercase">Services rendus</h6>
                     </div>
                 </div>
+                <button id="download-csv" class="btn btn-primary">Télécharger CSV</button>
+
+                <script>
+                    document.getElementById("download-csv").addEventListener("click", function() {
+                        window.location.href = "{% url 'generate_csv_services_rendus' %}";
+                    });
+                </script>
                 <div class="table-responsive">
                     
                     <div class="table-responsive">
@@ -195,7 +202,7 @@
    {%endif%}
    {%if utilisateur.profil.id == 2%}
    <div class="col">
-    <h6 class="mb-0 text-uppercase">Sollicitation des services</h6>
+    <h6 class="mb-0 text-uppercase">Sollicitation globale des services pour l'agent</h6>
 	<hr/>
 	<div class="card mx-auto">
 		<div class="card-body">
@@ -206,7 +213,7 @@
    {%endif%}
    {%if utilisateur.profil.id == 3%}
    <div class="col">
-    <h6 class="mb-0 text-uppercase">Sollicitation des services</h6>
+    <h6 class="mb-0 text-uppercase">Sollicitation globale des services pour l'agence</h6>
 	<hr/>
 	<div class="card mx-auto">
 		<div class="card-body">

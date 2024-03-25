@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Point des validations {% endblock %}
+
+{% block body %}
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>POINT DES VALIDATIONS</h6>
+				<div class="card">
+					<div class="card-body">
+						<div class="table-responsive">
+							<table class="table table-striped table-bordered table-hover my-3">
+								<thead>
+									<tr>
+										<th>Date validation</th>
+                                        <th>Agence</th>
+                                        <th>Validateur</th>
+                                        <th>Montant</th>
+                                        <th>Validé ?</th>
+									</tr>
+								</thead>
+								<tbody>
+                                    {% for validation in validations %}
+                                    <tr>
+										<td>{{validation.day}} </td>
+                                        <td>{{validation.agence.intitule}}</td>
+                                        <td>{{validation.validator.nom_prenom}}</td>
+                                        <td class="text-center">{{validation.montant}}</td>
+                                        <td>
+                                            {%if validation.validate %}
+                                            <span class="badge bg-success">Oui</span>
+                                            {%else%}
+                                            <span class="badge bg-danger">Non</span>
+                                            {%endif%}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+{% endblock %}

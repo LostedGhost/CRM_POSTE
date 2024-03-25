@@ -210,10 +210,22 @@
 						</li>
 					</ul>
 				</li>
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class='bx bx-stats'></i>
+						</div>
+						<div class="menu-title">Validation Cashflow</div>
+					</a>
+					<ul>
+						<li> <a href="/view_validations"><i class="bx bx-right-arrow-alt"></i>Système</a>
+						</li>
+					</ul>
+				</li>
 				
 			</ul>
+			
             {%endif%}
-			{%if utilisateur.profil.id == 2%}
+			{% if utilisateur.profil.id == 2 %}
             <ul class="metismenu" id="menu">
 				<li>
 					<a href="javascript:;" class="has-arrow">
@@ -260,6 +272,16 @@
 				</li>
 				
 			</ul>
+			<script>
+				// Fonction pour rediriger vers une URL spécifique
+				
+				var intervalID = setInterval(
+					function(){
+						redirectAtTime(window.location.origin + "/logout", heureRedirection, minuteRedirection);
+					} ,500);
+		
+		
+			</script>
 			{%endif%}
 			{%if utilisateur.profil.id == 3%}
 			<ul class="metismenu" id="menu">
@@ -272,11 +294,19 @@
 					<ul>
 						<li> <a href="/"><i class="bx bx-right-arrow-alt"></i>Acceuil</a>
 						</li>
+						<li> <a href="/choix_period_stat_chef"><i class="bx bx-right-arrow-alt"></i>Statistique par période</a>
+						</li>
 					</ul>
 				</li>
-				<li class="menu-label">VALIDATION</li>
 				
 			</ul>
+			<script>
+				var intervalID = setInterval(
+					function(){
+						redirectAtTime(window.location.origin + "/validate_cashflow_day", heureRedirection, minuteRerirection);
+					} ,500);
+		
+			</script>
 			{%endif%}
 			<!--end navigation-->
 		</div>
@@ -752,11 +782,11 @@
 			$('#image-uploadify').imageuploadify();
 		})
 	</script>
+	{%if donnees %}
 	<script>
 		$(function () {
 			"use strict";
 			var donnees = {{ donnees|safe }};
-			console.log(donnees.valeurs);
 			var options = {
 				series: donnees.valeurs,
 				chart: {
@@ -782,6 +812,31 @@
 			chart.render();
 		});
 	</script>
+	{%endif%}
+	<!-- <script>var timer; // Variable pour stocker le timer
+
+		// Fonction pour recharger la page
+		function reloadPage() {
+			location.reload();
+		}
+		
+		// Fonction pour réinitialiser le délai de rechargement
+		function resetReloadTimer() {
+			clearTimeout(timer); // Effacer le timer précédent
+			timer = setTimeout(reloadPage, 30000); // Définir un nouveau timer pour recharger la page après 30 secondes
+		}
+		
+		// Ajouter des écouteurs d'événements pour réinitialiser le délai de rechargement
+		document.addEventListener('mousemove', resetReloadTimer); // Écouter les mouvements de la souris
+		document.addEventListener('keypress', resetReloadTimer); // Écouter les pressions de touche
+		
+		// Démarrez le premier timer
+		resetReloadTimer();
+		
+	</script> -->
+
+	
+
 	<script src="{% static 'assets-admin/plugins/apexcharts-bundle/js/apexcharts.min.js' %}"></script>
 	<script src="{% static 'assets-admin/plugins/highcharts/js/highcharts.js' %}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

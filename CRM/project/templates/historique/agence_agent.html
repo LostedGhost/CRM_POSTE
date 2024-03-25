@@ -8,8 +8,13 @@
 				
 				<div class="card">
 					<div class="card-body">
-                        <form id="form" name="myform" method="POST"  
-                                class="form-horizontal bg-form row g-3 mb-3" name="NEW">
+                        <select name="choix" id="choixValid" class="form-control single-select" required>
+                            <option value="">Sélectionnez une option</option>
+                            <option value="form1">Par agence</option>
+                            <option value="form2">Par agent</option>
+                        </select>
+                        <form id="form1" name="myform" method="POST"  
+                                class="form-horizontal bg-form row g-3 mb-3" name="NEW" hidden>
                                 {% csrf_token %}
                                 <div class="card-title d-flex align-items-center">
                                     <div>
@@ -27,7 +32,7 @@
                                             <option value="{{agence.code}}">{{agence.intitule}}</option>
                                             {%endfor%}
                                         </select>
-                                        <button class=" btn" type="submit" id="enregistrer" 
+                                        <button class=" btn" type="submit"
                                         > <span class=""><i class='bx bx-search' ></i></span>
                                         </button >
                                         
@@ -35,9 +40,8 @@
                                 </div>
 
                         </form>
-                        <hr>
-                        <form id="form" name="myform" method="POST"  
-                                class="form-horizontal bg-form row g-3 mb-3" name="NEW">
+                        <form id="form2" name="myform" method="POST"  
+                                class="form-horizontal bg-form row g-3 mb-3" name="NEW" hidden>
                                 {% csrf_token %}
                                 <div class="card-title d-flex align-items-center">
                                     <div>
@@ -55,7 +59,7 @@
                                             <option value="{{agent.code}}">{{agent.agence.intitule}} - {{agent.nom}} {{agent.prenom}} </option>
                                             {%endfor%}
                                         </select>
-                                        <button class=" btn" type="submit" id="enregistrer" 
+                                        <button class=" btn" type="submit" 
                                         > <span class=""><i class='bx bx-search' ></i></span>
                                         </button >
                                         

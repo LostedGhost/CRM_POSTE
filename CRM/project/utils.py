@@ -6,6 +6,18 @@ import random
 import string
 from num2words import num2words
 import datetime
+from datetime import datetime, time, timedelta
+
+def premiere_heure_jour():
+    maintenant = datetime.now()
+    premiere_heure = datetime.combine(maintenant.date(), time.min)
+    return premiere_heure
+
+def derniere_heure_jour():
+    maintenant = datetime.now()
+    derniere_heure = datetime.combine(maintenant.date(), time.max)
+    return derniere_heure
+
 
 def generer_code_couleur():
     # Génération de trois composantes de couleur en format hexadécimal
@@ -50,7 +62,7 @@ def generate_strong_password(length=12):
 
 
 def generate_code(prefix, position):
-    date = datetime.datetime.now()
+    date = datetime.now()
     f = str(date.year)[-2:] + f'{date.month:02d}' + f'{date.day:02d}' + f'{date.hour:02d}' + f'{date.minute:02d}' + f'{date.second:02d}'
     s = prefix + '{:08d}'.format(position) + f
     return s

@@ -136,7 +136,10 @@
 																			<div class="thanks">Merci pour votre confiance !</div>
 																			<div class="notices">
 																				<div>NOTE:</div>
-																				<div class="notice">Cette facture est le point de votre demande effectuée à la Poste du Bénin.</div>
+																				<div class="notice">Cette facture est le point de votre demande effectuée à la Poste du Bénin.
+																					
+																					<p> Statut de la demande: {%if demande.statut.id <= 2 %} EN COURS{%else%} {{demande.statut.libelle}}{%endif%}. </p>
+																				</div>
 																			</div>
 																		</main>
 																		<footer>
@@ -176,7 +179,7 @@
 															<script>
 																document.getElementById('telechargerPDF{{demande.id}}').addEventListener('click', function() {
 																	var element = document.getElementById('invoice{{demande.id}}');
-                                                                    var contenuHTML = element.innerHTML;
+                                                                    /*var contenuHTML = element.innerHTML;
                                                                     var separationDiv = document.createElement('div');
                                                                     separationDiv.style.borderTop = "1px dashed black"; // Définir une bordure supérieure pointillée
                                                                     separationDiv.style.marginTop = "20px"; // Ajouter une marge supérieure pour l'espace
@@ -185,19 +188,19 @@
                                                                     separationDiv.innerHTML = contenuHTML;
 
                                                                     // Ajouter la div d'origine avant la séparation
-                                                                    element.parentNode.insertBefore(element.cloneNode(true), element.nextSibling);
-
-                                                                    // Ajouter la séparation avant la div dupliquée
-                                                                    element.parentNode.insertBefore(separationDiv, element.nextSibling);
+                                                                    element.parentNode.insertBefore(separationDiv.cloneNode(true), element.nextSibling);
+																	*/
 																	var options = {
 																		filename: '{{demande.code}}.pdf',
 																		html2canvas: {
 																			scale: 2 
-																		}
+																		},
+																		orientation: 'portrait',
 																	};
 																	
-																	html2pdf().set(options).from(element.parentNode).save();
+																	html2pdf().set(options).from(element).save();
 																});
+															
 															</script>
 														</div>
 													</div>
@@ -262,13 +265,13 @@
                                                                         <td>{{demande_line.agent.nom}} {{demande_line.agent.prenom}}</td>
                                                                         <td>
                                                                             {%if demande_line.statut.id <= 2%}
-                                                                            <span class="badge bg-gradient-blooker text-white shadow-sm w-100">{{demande.statut.libelle}}</span>
+                                                                            <span class="badge bg-gradient-blooker text-white shadow-sm w-100">{{demande_line.statut.libelle}}</span>
                                                                             {%endif%}
                                                                             {%if demande_line.statut.id == 3 or demande_line.statut.id == 4%}
-                                                                            <span class="badge bg-gradient-bloody text-white shadow-sm w-100">{{demande.statut.libelle}}</span>
+                                                                            <span class="badge bg-gradient-bloody text-white shadow-sm w-100">{{demande_line.statut.libelle}}</span>
                                                                             {%endif%}
                                                                             {%if demande_line.statut.id == 5%}
-                                                                            <span class="badge bg-gradient-quepal text-white shadow-sm w-100">{{demande.statut.libelle}}</span>
+                                                                            <span class="badge bg-gradient-quepal text-white shadow-sm w-100">{{demande_line.statut.libelle}}</span>
                                                                             {%endif%}
                                                                             
                                                                         </td>

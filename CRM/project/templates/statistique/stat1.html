@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Liste des demandes formulées par autrui {% endblock %}
+
+{% block body %}
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>LISTE DES DEMANDES formulées par autrui</h6>
+
+				
+				<div class="card">
+					<div class="card-body">
+                        <div class="col">
+                            <h6 class="mb-0 text-uppercase">Sollicitation des services</h6>
+                            <hr/>
+                            <div class="card mx-auto">
+                                <div class="card-body">
+                                    <div id="stat1"></div>
+                                </div>
+                            </div>
+                        </div>
+					</div>
+                    <div class="form-group text-center mb-3">
+                        <a href="/" class="btn btn-light border" type="button" id="fermer">Fermer
+                        </a>
+                    </div>
+				</div>
+{% endblock %}

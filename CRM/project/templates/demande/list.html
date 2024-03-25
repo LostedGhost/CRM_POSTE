@@ -41,12 +41,14 @@
 												<button type="button" class="btn btn-sm btn-download text-end" data-bs-toggle="modal" data-bs-target="#viewFac{{demande.id}}" title="modifier">
 													<span class="bx bx-download"></span>
 												</button>
+												{% if demande.statut.id <= 3 %}
 												<a href="/demande/focus/{{demande.id}}">
 													<button class="btn btn-sm btn-success text-end" type="button" 
 													title="suivre" >
 													<span class="lni lni-play"></span>
 													</button>
 												</a>
+												{% endif %}
                                             <button class="btn btn-sm btn-danger text-end" type="button" data-bs-toggle="modal" data-bs-target="#deleteDemande{{demande.id}}"
 												title="supprimer" >
 												<span class="bx bx-trash"></span>
@@ -133,7 +135,10 @@
 																			<div class="thanks">Merci pour votre confiance !</div>
 																			<div class="notices">
 																				<div>NOTE:</div>
-																				<div class="notice">Cette facture est le point de votre demande effectuée à la Poste du Bénin.</div>
+																				<div class="notice">Cette facture est le point de votre demande effectuée à la Poste du Bénin.
+																					
+																					<p> Statut de la demande: {%if demande.statut.id <= 2 %} EN COURS{%else%} {{demande.statut.libelle}}{%endif%}. </p>
+																				</div>
 																			</div>
 																		</main>
 																		<footer>

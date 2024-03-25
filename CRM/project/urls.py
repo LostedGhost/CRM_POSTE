@@ -73,7 +73,26 @@ urlpatterns = [
     path(r'statistique/agence-agent', views.stat_agence_agent, name="stat_agence_agent"),
     path(r'statistique/stat/<str:agence_code>', views.stat_by_agence, name="stat_by_agence"),
     path(r'statistique/stat/agent/<str:agent_code>', views.stat_by_agent, name="stat_by_agent"),
+    path(r'statistique/stat/period/<str:debut>/<str:fin>', views.stat_by_period, name="stat_by_period"),
+    path(r'statistique/stat/agence/period/<str:agence_code>/<str:debut>/<str:fin>', views.stat_by_agence_and_period, name="stat_by_agence_and_period"),
+    path(r'choix_period_stat_chef', views.choix_period_stat_chef, name="choix_period_stat_chef"),
+    path(r'stat_chef_agence_period/<str:debut>/<str:fin>', views.stat_chef_agence_period, name="stat_chef_agence_period"),
     
     
+    path(r'generate_csv_services_rendus', views.generate_csv_services_rendus, name="generate_csv_services_rendus"),
+    path(r'generate_csv_agence', views.generate_csv_agence, name="generate_csv_agence"),
+    path(r'generate_csv_agence_lead', views.generate_csv_agence_lead, name="generate_csv_agence_lead"),
+    path(r'generate_csv_agent', views.generate_csv_agent, name="generate_csv_agent"),
+    path(r'generate_csv_entite', views.generate_csv_entite, name="generate_csv_entite"),
+    path(r'generate_csv_structure', views.generate_csv_structure, name="generate_csv_structure"),
+    path(r'generate_csv_service', views.generate_csv_service, name="generate_csv_service"),
+    path(r'generate_csv_prestations', views.generate_csv_prestations, name="generate_csv_prestations"),
+    
+    path(r'validate_cashflow_day', views.validate_cashflow_day, name="validate_cashflow_day"),
+    path(r'valider_day', views.valider_day, name="valider_day"),
+    path(r'invalider_day', views.invalider_day, name="invalider_day"),
+    path(r'view_validations', views.view_validations, name="view_validations"),
+    path(r'view_validations/period/<str:debut>/<str:fin>', views.validation_by_period, name="validation_by_period"),
+    path(r'view_validations/agence/period/<str:code_agence>/<str:debut>/<str:fin>', views.validation_by_agence_period, name="validation_by_agence_period"),
     
 ]
