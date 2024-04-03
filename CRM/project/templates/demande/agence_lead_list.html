@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %} Historique demandes clients {% endblock %}
+{% block title %} Liste des demandes clients {% endblock %}
 
 {% block body %}
-<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>HISTORIQUE DES DEMANDES DU SYSTème</h6>
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>LISTE DES DEMANDES</h6>
 
 				
 				<div class="card">
@@ -12,50 +12,45 @@
 							<table id="myDataTable" class="table table-striped table-bordered table-hover my-3">
 								<thead>
 									<tr>
-                                        <th>Date de la dernière modification</th>
+										<th>Date modification</th>
 										<th>Client</th>
-                                        <th>Structure</th>
-                                        <th>Service</th>
-                                        <th>Statut</th>
-										<th>Observations</th>
+                                        <th>Dénomination</th>
+										<th>Commentaire</th>
+                                        <th>Entité</th>
 										<th class="text-end">Actions</th>
 									</tr>
 								</thead>
 								<tbody>
                                     {% for demande in demandes %}
                                     <tr>
-                                        <td>{{demande.date_creation_rep}} </td>
+										<td>{{demande.date_creation_rep}} </td>
 										<td>{{demande.client.nom}} {{demande.client.prenom}}</td>
-                                        <td>{{demande.service.structure.entite.denomination}} - {{demande.service.structure.denomination}}</td>
                                         <td>{{demande.service.intitule}}</td>
-                                        <td>
-                                            {%if demande.statut.id <= 2%}
-                                            <span class="badge bg-gradient-blooker text-white shadow-sm w-100">{{demande.statut.libelle}}</span>
-                                            {%endif%}
-                                            {%if demande.statut.id == 3 or demande.statut.id == 4%}
-                                            <span class="badge bg-gradient-bloody text-white shadow-sm w-100">{{demande.statut.libelle}}</span>
-                                            {%endif%}
-                                            {%if demande.statut.id == 5%}
-                                            <span class="badge bg-gradient-quepal text-white shadow-sm w-100">{{demande.statut.libelle}}</span>
-                                            {%endif%}
-                                            
-                                        </td>
 										<td>{{demande.observations}} </td>
+                                        <td>{{demande.service.structure.entite.denomination}} </td>
 										
                                         <td class="">
+                                            
 												<div class="text-end">
 													<button class="btn btn-sm btn-primary text-end" type="button" data-bs-toggle="modal" data-bs-target="#viewDemande{{demande.id}}"
 												title="voir" >
-												<span class="bx bx-dollar"></span>
+												<span class="lni lni-eye"></span>
 												</button>
-												<button type="button" class="btn btn-sm btn-download text-end" data-bs-toggle="modal" data-bs-target="#viewFact{{demande.id}}" title="voir">
+												<button type="button" class="btn btn-sm btn-download text-end" data-bs-toggle="modal" data-bs-target="#viewFac{{demande.id}}" title="modifier">
 													<span class="bx bx-download"></span>
 												</button>
-                                                <button type="button" class="btn btn-sm btn-success text-end" data-bs-toggle="modal" data-bs-target="#viewHisto{{demande.id}}" title="voir">
-													<span class="lni lni-eye"></span>
-												</button>
+                                                <button class="btn btn-sm btn-danger text-end" type="button" data-bs-toggle="modal" data-bs-target="#deleteDemande{{demande.id}}"
+												title="supprimer" >
+												    <span class="bx bx-trash"></span>
+											    </button>
+                                                {%if demande.is_deleted %}
+                                                
+                                                <div class="div-center mt-2">
+                                                    <span class="badge bg-danger">Supprimé</span>
+                                                </div>
+                                                {%endif%}
 												</div>
-											<div class="modal fade" id="viewFact{{demande.id}}" tabindex="-1" aria-hidden="true">
+											<div class="modal fade" id="viewFac{{demande.id}}" tabindex="-1" aria-hidden="true">
 												<div class="modal-dialog modal-fullscreen">
 													<div class="modal-content">
 														<div class="modal-header">
@@ -231,71 +226,26 @@
 													</div>
 												</div>
 											</div>
-                                            <div class="modal fade" id="viewHisto{{demande.id}}" tabindex="-1" aria-hidden="true">
-												<div class="modal-dialog modal-fullscreen">
+                                            <div class="modal fade col-5" id="deleteDemande{{demande.id}}" aria-labelledby="#exampleScrollableModal" tabindex="-1" aria-hidden="true">
+												<div class="modal-dialog modal-dialog-scrollable">
 													<div class="modal-content">
 														<div class="modal-header">
-															<h5 class="modal-title">Historique</h5>
+															<h5 class="modal-title" id="exampleScrollableModal">Confirmation</h5>
 															<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 														</div>
-														<div class="modal-body">
-															<table class="table mb-0 table-striped table-bordered table-hover">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th scope="col">Date creation</th>
-                                                                        <th scope="col">Date cessation</th>
-                                                                        <th scope="col">Client</th>
-                                                                        <th scope="col">Structure</th>
-                                                                        <th scope="col">Service</th>
-                                                                        <th scope="col">Agence</th>
-                                                                        <th scope="col">Agent</th>
-                                                                        <th scope="col">Statut</th>
-                                                                        <th scope="col">Observation</th>
-                                                                        <th scope="col">Montant perçu</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    {% for demande_line in demande.all_of_code %}
-                                                                    <tr>
-                                                                        <th scope="row">{{demande_line.date_creation}}</th>
-                                                                        <td>{{demande_line.date_cessation}}</td>
-                                                                        <td>{{demande_line.client.nom}} {{demande_line.client.prenom}}</td>
-                                                                        <td>{{demande_line.service.structure.entite.denomination}} - {{demande_line.service.structure.denomination}}</td>
-                                                                        <td>{{demande_line.service.intitule}}</td>
-                                                                        <td>{{demande_line.agent.agence.intitule}}</td>
-                                                                        <td>{{demande_line.agent.nom}} {{demande_line.agent.prenom}}</td>
-                                                                        <td>
-                                                                            {%if demande_line.statut.id <= 2%}
-                                                                            <span class="badge bg-gradient-blooker text-white shadow-sm w-100">{{demande_line.statut.libelle}}</span>
-                                                                            {%endif%}
-                                                                            {%if demande_line.statut.id == 3 or demande_line.statut.id == 4%}
-                                                                            <span class="badge bg-gradient-bloody text-white shadow-sm w-100">{{demande_line.statut.libelle}}</span>
-                                                                            {%endif%}
-                                                                            {%if demande_line.statut.id == 5%}
-                                                                            <span class="badge bg-gradient-quepal text-white shadow-sm w-100">{{demande_line.statut.libelle}}</span>
-                                                                            {%endif%}
-                                                                            
-                                                                        </td>
-                                                                        <td>{{demande_line.observations}}</td>
-                                                                        <th class="text-end">{{demande_line.montant_percu}} CFA</th>
-                                                                        
-                                                                    </tr>
-                                                                    {%endfor%}
-                                                                    
-                                                                </tbody>
-                                                            </table>
-                                                            <div class="text-end mt-3 text-uppercase fs-6 fw-bold">
-                                                                <h6> Montant total : <span class="bg-primary text-white">{{demande.montant_total}} CFA</span></h6>
-                                                            </div>
-														</div>
+														<div class="modal-body text-center">La suppression de cette demande est irréversible.</div>
 														<div class="modal-footer">
-															<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-
+															<a href="/demande/delete/{{demande.id}}">
+																<button type="button" class="btn btn-danger">Continuer</button>
+															</a>
+															<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
 														</div>
 													</div>
 												</div>
-											
 											</div>
+                                            
+                                            
+											
                                         </td>
                                     </tr>
                                     {% endfor %}

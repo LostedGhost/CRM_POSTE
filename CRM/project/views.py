@@ -115,17 +115,12 @@ def profile(request):
         return redirect("/login")
     user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
     if request.POST:
-        nom = request.POST.get('nom').upper()
-        prenom = request.POST.get('prenom')
-        email = request.POST.get('email')
-        telephone = request.POST.get('telephone')
-        adresse = request.POST.get('adresse')
         photo = request.FILES.get('photo')
         if photo == None:
             photo = user.photo
         password = request.POST.get('password')
         
-        u = Utilisateur(photo=photo, code=user.code,nom=nom, prenom=prenom, agence=user.agence, telephone=telephone, email=email, adresse=adresse, login=user.login, password=chiffrement_cesar(password, SECRET), profil=user.profil,modifier_par=user.code)
+        u = Utilisateur(photo=photo, code=user.code,nom=user.nom, prenom=user.prenom, agence=user.agence, telephone=user.telephone, email=user.email, adresse=user.adresse, login=user.login, password=chiffrement_cesar(password, SECRET), profil=user.profil,modifier_par=user.code)
         u.save()
         
         user.date_cessation = datetime.now()
@@ -155,6 +150,85 @@ def liste_agence_leader(request):
                    "agents": agents,
                    }
                   )
+
+def liste_supervisor(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    supervisors = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).filter(profil__id=4)
+    return render(request, 'supervisor/list.html',
+                  {"utilisateur": user,
+                   "error":error,
+                   "success":success,
+                   "supervisors": supervisors,
+                   }
+                  )
+
+def ajout_supervisor(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    max_date = datetime.now() - timedelta(days=18*365)
+    agences = Agence.objects.filter(date_cessation=INFINITY_DATE)
+    if request.POST:
+        nom = request.POST['nom']
+        prenom = request.POST['prenom']
+        email = request.POST['email']
+        telephone = request.POST['telephone']
+        adresse = request.POST['adresse']
+        profil = Profil.objects.get(id=4)
+        login = request.POST['login']
+        password = generate_strong_password()
+        code = generate_code("UTL", Utilisateur.real_number()+1)
+        modifier_par = user.code
+        try:
+            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(login=login)
+            request.session['error'] = 'Le login doit être unique.'
+            return redirect("/supervisor/list")
+        except:
+            pass
+        try:
+            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(nom=nom, prenom=prenom)
+            request.session['error'] = 'Un utilisateur ayant le même nom et le même prénom existe déjà.'
+            return redirect("/supervisor/list")
+        except:
+            pass
+        try:
+            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(email=email)
+            request.session['error'] = 'Email déjà utilisé'
+            return redirect("/supervisor/list")
+        except:
+            pass
+        try:
+            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(telephone=telephone)
+            request.session['error'] = 'Telephone déjà utilisé'
+            return redirect("/supervisor/list")
+        except:
+            pass
+        try:
+            Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(date_naissance__gt=max_date)
+            request.session['error'] = 'Date invalide'
+            return redirect("/supervisor/list")
+        except:
+            pass
+        u = Utilisateur(code=code,nom=nom, prenom=prenom, telephone=telephone, email=email, adresse=adresse, login=login, password=chiffrement_cesar(password, SECRET), profil=profil,modifier_par=modifier_par)
+        u.save()
+        request.session["success"] = "Superviseur ajouté avec succès"
+        return redirect("/supervisor/list")
+    return render(request, 'supervisor/add.html',{
+        "utilisateur": user,
+        "error": error,
+        "success":success,
+        "max_date":max_date.strftime("%Y-%m-%d"),
+        "agences":agences,
+    })
+
 
 def ajout_agence_leader(request):
     user_identifiant = request.session.get('user')
@@ -246,6 +320,9 @@ def edit_agence_leader(request, lead_id):
         try:
             Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(agence=agence)
             request.session['error'] = 'Il ne peut y avoir plusieurs chefs pour une même agence.'
+            lead.date_cessation = INFINITY_DATE
+            lead.save()
+            return redirect("/agence-leader/list")
         except:
             pass
         u = Utilisateur(code=lead.code,nom=lead.nom, prenom=lead.prenom, agence=agence, telephone=lead.telephone, email=lead.email, adresse=lead.adresse, login=lead.login, password=chiffrement_cesar(password, SECRET), profil=lead.profil,modifier_par=user.code)
@@ -276,6 +353,19 @@ def delete_agence_leader(request, lead_id):
     lead.save()
     request.session['success'] = "Chef d'agence supprimé avec succès"
     return redirect("/agence-leader/list")
+
+def delete_supervisor(request, sup_id):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    success = request.session.pop('success', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    sup = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=sup_id)
+    sup.date_cessation = datetime.now()
+    sup.save()
+    request.session['success'] = "Superviseur supprimé avec succès"
+    return redirect("/supervisor/list")
 
 def liste_agent(request):
     user_identifiant = request.session.get('user')
@@ -861,6 +951,23 @@ def delete_option(request, opt_id):
     option.save()
     return redirect("/option/list")
 
+def liste_demande_agence_lead(request):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    demandes = Demande.objects.filter(date_cessation=INFINITY_DATE).filter(agent__agence__code=user.agence.code).order_by('-id')
+    options_sup = OptionSupplementaire.objects.filter(date_cessation=INFINITY_DATE)
+    return render(request, 'demande/agence_lead_list.html',
+                  {"utilisateur": user,
+                   "error": error,
+                   "demandes":demandes,
+                   "options_sup":options_sup,
+                  }
+    )
+
+
 def liste_demande(request):
     user_identifiant = request.session.get('user')
     error = request.session.pop('error', None)
@@ -1247,7 +1354,20 @@ def delete_demande(request, dem_id):
     demande.date_cessation = datetime.now()
     demande.modifier_par = user.code
     demande.save()
+    return redirect("/agence-leader/demandes")
+
+def delete_demande_from_agent(request, dem_id):
+    user_identifiant = request.session.get('user')
+    error = request.session.pop('error', None)
+    if user_identifiant is None:
+        return redirect("/login")
+    user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
+    demande = Demande.objects.filter(date_cessation=INFINITY_DATE).get(id=dem_id)
+    demande.is_deleted = True
+    demande.modifier_par = user.code
+    demande.save()
     return redirect("/demande/list")
+
 
 def historique_demande(request):
     user_identifiant = request.session.get('user')
@@ -1750,19 +1870,30 @@ def validate_cashflow_day(request):
     user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(id=user_identifiant)
     today_debut = premiere_heure_jour()
     today_fin = derniere_heure_jour()
-    demandes = Demande.objects.filter(date_creation__gt=today_debut, date_creation__lt=today_fin).filter(agent__agence__code=user.agence.code)
+    demandes = Demande.objects.filter(date_creation__gt=today_debut, date_creation__lt=today_fin).filter(agent__agence__code=user.agence.code).filter(date_cessation=INFINITY_DATE)
+    hasValidation = Validation.objects.filter(day__gt=today_debut, day__lt=today_fin, validator__code = user.code).exists()
+    if hasValidation:
+        return redirect("/logout")
     total_of_day = 0
     for demande in demandes:
         total_of_day += demande.montant_percu_today()
+    demandes_without_deleted = Demande.objects.filter(date_creation__gt=today_debut, date_creation__lt=today_fin).filter(agent__agence__code=user.agence.code).filter(date_cessation=INFINITY_DATE).filter(is_deleted=False)
+    total_of_day_without_deleted = 0
+    for demande in demandes_without_deleted:
+        total_of_day_without_deleted += demande.montant_percu_today()
+    difference_montant = total_of_day - total_of_day_without_deleted
     
     return render(request, "validation/today.html",
                   {'utilisateur': user,
                    'error': error,
                    'success': success,
                    "demandes": demandes,
+                   "demandes_without_deleted":demandes_without_deleted,
                    "today_debut":today_debut,
                    "today_fin":today_fin,
-                   "total_of_day":total_of_day
+                   "total_of_day":total_of_day,
+                   "total_of_day_without_deleted":total_of_day_without_deleted,
+                   "difference_montant":difference_montant
                    })
 
 def valider_day(request):

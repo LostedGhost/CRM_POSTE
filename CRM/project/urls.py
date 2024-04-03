@@ -14,6 +14,12 @@ urlpatterns = [
     path(r'agence-leader/add', views.ajout_agence_leader, name="ajout_agence_leader"),
     path(r'agence-leader/edit/<int:lead_id>', views.edit_agence_leader, name="edit_agence_leader"),
     path(r'agence-leader/delete/<int:lead_id>', views.delete_agence_leader, name="delete_agence_leader"),
+    path(r'agence-leader/demandes', views.liste_demande_agence_lead, name="liste_demande_agence_lead"),
+    
+    path(r'supervisor/list', views.liste_supervisor, name="liste_supervisor"),
+    path(r'supervisor/add', views.ajout_supervisor, name="ajout_supervisor"),
+    path(r'supervisor/delete/<int:sup_id>', views.delete_supervisor, name="delete_supervisor"),
+    
     
     path(r'agents/list', views.liste_agent, name="liste_agent"),
     path(r'agents/add', views.ajout_agent, name="ajout_agent"),
@@ -62,6 +68,7 @@ urlpatterns = [
     path(r'demande/view_date/<int:year>/<int:month>/<int:day>/', views.view_demande_by_date, name="view_demande_by_date"),
     path(r'demande/edit/<int:dem_id>', views.edit_service, name="edit_service"),
     path(r'demande/delete/<int:dem_id>', views.delete_demande, name="delete_demande"),
+    path(r'demande/delete_from_agent/<int:dem_id>', views.delete_demande_from_agent, name="delete_demande_from_agent"),
     
     
     path(r'historique/demande', views.historique_demande, name="historique_demande"),

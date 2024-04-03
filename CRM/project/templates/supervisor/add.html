@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %} Ajout d'agent {% endblock %}
+{% block title %} Ajout d'un superviseur {% endblock %}
 
 {% block body %}
-<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>CREATION D'AGENT</h6>
+<h6 class="mb-3 text-uppercase p-3 shadow-sm bg-light-primary"><i class='lni lni-bookmark mx-3'></i>CREATION D'un superviseur</h6>
 
 <div class="div-center">
     <div class="card mt-4 col-md-10 div-center">
@@ -26,7 +26,6 @@
                                 placeholder="Login" required/> 
                         </div>
                     </div>
-
                         <div class="col-md-6">
                             <label class="col-sm-12 col-form-label">Nom *</label>
                             <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bxs-user'></i></span>
@@ -51,8 +50,8 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="col-sm-12 col-form-label">Téléphone *</label>
-                               <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-phone-call' ></i></span>
+                            <label class="col-sm-12 col-form-label">Téléphone mobile*</label>
+                            <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-phone-call' ></i></span>
                                 <input type="text" class="form-control" name="telephone" id="inputTelephone" 
                                 placeholder="0021XXXXXX" required/>
                             </div>
@@ -65,24 +64,12 @@
                                 placeholder="Cotonou" required/>
                             </div>
                         </div>
-
-                        <div class="col-md-6 mx-auto">
-                            <label class="col-sm-12 col-form-label">Agence *</label>
-                            <div class="input-group"> <span class="input-group-text bg-transparent"><i class='bx bx-building' ></i></span>
-                                <select name="agence" id="inputSite" class="form-control single-select" required>
-                                    <option value="">Sélectionnez une agence</option>
-                                    {%for agence in agences%}
-                                    <option value="{{agence.code}}">{{agence.intitule}}</option>
-                                    {%endfor%}
-                                </select>
-                            </div>
-                        </div>
                         
                         <div class="form-group text-center">
                             <button class="btn btn-blue-s mr-2" type="submit" id="enregistrer" 
                             > Enregistrer
                             </button >
-                            <a href="/agents/list" class="btn btn-light border" type="button" id="fermer">Fermer
+                            <a href="/supervisor/list" class="btn btn-light border" type="button" id="fermer">Fermer
                             </a>
                         </div>
                 </form>

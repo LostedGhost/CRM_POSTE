@@ -344,6 +344,9 @@ p.save()
 p = Profil(code=generate_code("PRF", Profil.real_number() + 1), modifier_par="DEV", libelle="CHEF AGENCE")
 p.save()
 
+p = Profil(code=generate_code("PRF", Profil.real_number() + 1), modifier_par="DEV", libelle="SUPERVISEUR") 
+p.save()
+
 ##################### UTILISATEUR ###################
 u = Utilisateur(code=generate_code("UTL", Utilisateur.real_number() + 1), modifier_par="DEV", nom="TOPANOU", prenom="Ludel", email="topanoulucio@gmail.com", telephone="61012344", adresse="Cotonou", login="Lucio", password=chiffrement_cesar("0000", SECRET), profil=Profil.objects.get(id=1))
 u.save()

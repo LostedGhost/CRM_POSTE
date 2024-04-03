@@ -18,6 +18,15 @@ def derniere_heure_jour():
     derniere_heure = datetime.combine(maintenant.date(), time.max)
     return derniere_heure
 
+def ajouter_jours(date_depart, jours_a_ajouter):
+    # Convertir la chaîne de date en objet datetime si nécessaire
+    if isinstance(date_depart, str):
+        date_depart = datetime.strptime(date_depart, "%Y-%m-%d")
+
+    # Ajouter le nombre de jours à la date de départ
+    nouvelle_date = date_depart + timedelta(days=jours_a_ajouter)
+
+    return nouvelle_date
 
 def generer_code_couleur():
     # Génération de trois composantes de couleur en format hexadécimal

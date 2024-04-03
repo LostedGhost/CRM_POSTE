@@ -14,20 +14,34 @@
                             <th scope="col" >#</th>
                             <th scope="col"> Client </th>
                             <th scope="col">Montant perçu</th>
+                            <th scope="col">Supprimé ?</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {%for demande in demandes%}
+                        {%for demande in demandes_without_deleted%}
                         <tr>
                             <td> - </td>
                             <td>{{demande.client.nom_prenom}} </td>
                             <td>{{demande.montant_percu_today}} Francs CFA</td>
+                            <td class="div-center">
+                                {%if demande.is_deleted%}
+                                <span class="badge bg-danger">Oui</span>
+                                {%else%}
+                                <span class="badge bg-success">Non</span>
+                                {%endif%}
+                            </td>
                         </tr>
                         {%endfor%}
                     </tbody>
                 </table>
                 <tfoot>
-                    <h1 class="text-uppercase">Total: {{total_of_day}} FCFA </h1>
+                    
+                    {%if difference_montant != 0%}
+                    <p class="row">
+                        <span class="badge bg-danger">Montant supprimé dans la journée:</span> <b class="text-dark text-uppercase div-center">{{difference_montant}} FCFA</b>
+                    </p>
+                    {%endif%}
+                    <h1 class="text-uppercase">Total: {{total_of_day_without_deleted}} FCFA </h1>
                 </tfoot>
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#validerJournee">Valider</button>
                 <div class="modal fade" id="validerJournee" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

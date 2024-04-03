@@ -79,6 +79,20 @@
 					<ul>
 						<li>
 							<a class="has-arrow" href="javascript:;">
+								<div class="parent-icon"><i class="bx bx-database"></i>
+								</div>
+								<div class="menu-title">Superviseur</div>
+							</a>
+							<ul>
+								<li> <a href="/supervisor/list"><i class="bx bx-list-ol"></i>Liste</a>
+								</li>
+								<li> <a href="#"><i class="bx bx-plus"></i>Ajout</a>
+								</li>
+							</ul>
+						</li>
+
+						<li>
+							<a class="has-arrow" href="javascript:;">
 								<div class="parent-icon"><i class="bx bx-buildings"></i>
 								</div>
 								<div class="menu-title">Agence</div>
@@ -214,7 +228,7 @@
 					<a href="javascript:;" class="has-arrow">
 						<div class="parent-icon"><i class='bx bx-stats'></i>
 						</div>
-						<div class="menu-title">Validation Cashflow</div>
+						<div class="menu-title">Vue Cashflow</div>
 					</a>
 					<ul>
 						<li> <a href="/view_validations"><i class="bx bx-right-arrow-alt"></i>Système</a>
@@ -225,6 +239,70 @@
 			</ul>
 			
             {%endif%}
+
+			{%if utilisateur.profil.id == 4%}
+			<ul class="metismenu" id="menu">
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class='bx bx-home-circle'></i>
+						</div>
+						<div class="menu-title">Dashboard</div>
+					</a>
+					<ul>
+						<li> <a href="/"><i class="bx bx-right-arrow-alt"></i>Acceuil</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class='bx bx-comment-detail'></i>
+						</div>
+						<div class="menu-title">Historique demande</div>
+					</a>
+					<ul>
+						<li> <a href="/historique/demande"><i class="bx bx-right-arrow-alt"></i>Système</a>
+						</li>
+					</ul>
+					<ul>
+						<!-- href="/historique/agence-agent" -->
+						<li> <a href="/historique/agence-agent"><i class="bx bx-right-arrow-alt"></i>Agence ou Agent</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="/historique/clients">
+						<div class="parent-icon"> <i class="bx bx-user-check"></i>
+						</div>
+						<div class="menu-title">Historique client</div>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class='bx bx-stats'></i>
+						</div>
+						<div class="menu-title">Statistique</div>
+					</a>
+					<ul>
+						<li> <a href="/statistique/agence-agent"><i class="bx bx-right-arrow-alt"></i>Système</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class='bx bx-stats'></i>
+						</div>
+						<div class="menu-title">Vue Cashflow</div>
+					</a>
+					<ul>
+						<li> <a href="/view_validations"><i class="bx bx-right-arrow-alt"></i>Système</a>
+						</li>
+					</ul>
+				</li>
+				
+			</ul>
+			
+            {%endif%}
+
 			{% if utilisateur.profil.id == 2 %}
             <ul class="metismenu" id="menu">
 				<li>
@@ -295,6 +373,8 @@
 						<li> <a href="/"><i class="bx bx-right-arrow-alt"></i>Acceuil</a>
 						</li>
 						<li> <a href="/choix_period_stat_chef"><i class="bx bx-right-arrow-alt"></i>Statistique par période</a>
+						</li>
+						<li> <a href="/agence-leader/demandes"><i class="bx bx-right-arrow-alt"></i>Demandes</a>
 						</li>
 					</ul>
 				</li>

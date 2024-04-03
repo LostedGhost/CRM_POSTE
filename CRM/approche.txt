@@ -1,0 +1,15 @@
+superviseur ++
+
+modification profil (mot de passe et photo) ++
+
+ne pas permettre la suppression( le CA pourra le supprimer mais pas l'agent ) ++
+
+laisser les demandes annulés dans la liste de l'agent( ne pas supprimer, juste archiver) ++
+
+Prévoir 10 chiffres pour les numéros de téléphone ++
+
+Erreur de réaffectation des chefs d'agences ++
+
+Prévoir les délais sur les services ++
+
+Validation cashflow --> Vue cashflow ++

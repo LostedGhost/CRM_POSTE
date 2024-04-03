@@ -164,6 +164,7 @@ class Service(BaseEntity):
     structure = models.ForeignKey(Structure, on_delete=models.CASCADE, related_name="structure_service")
     montant = models.FloatField(default=0)
     couleur = models.CharField(max_length=MAX_LABEL_LENGTH, default='#fff')
+    delai = models.IntegerField(default=0)
     
     
     def generate_color():
@@ -260,6 +261,10 @@ class Demande(BaseEntity):
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name="service_demande")
     statut = models.ForeignKey(StatutDemande, on_delete=models.CASCADE, related_name="statut_demande")
     observations = models.TextField(default="RAS")
+    is_deleted = models.BooleanField(default=False)
+    
+    def date_butoire(self):
+        return ajouter_jours(self.date_creation, self.service.delai)
     
     def optionsSupplementaires(self):
         return OptionSupplementaireDemande.objects.filter(demande=self)

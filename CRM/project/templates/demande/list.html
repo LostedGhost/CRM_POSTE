@@ -33,6 +33,7 @@
                                         <td>{{demande.service.structure.entite.denomination}} </td>
 										
                                         <td class="">
+											{%if not demande.is_deleted %}
 												<div class="text-end">
 													<button class="btn btn-sm btn-primary text-end" type="button" data-bs-toggle="modal" data-bs-target="#viewDemande{{demande.id}}"
 												title="voir" >
@@ -49,10 +50,10 @@
 													</button>
 												</a>
 												{% endif %}
-                                            <button class="btn btn-sm btn-danger text-end" type="button" data-bs-toggle="modal" data-bs-target="#deleteDemande{{demande.id}}"
+												<button class="btn btn-sm btn-danger text-end" type="button" data-bs-toggle="modal" data-bs-target="#deleteDemande{{demande.id}}"
 												title="supprimer" >
-												<span class="bx bx-trash"></span>
-											</button>
+												    <span class="bx bx-trash"></span>
+											    </button>
 												</div>
 											<div class="modal fade" id="viewFac{{demande.id}}" tabindex="-1" aria-hidden="true">
 												<div class="modal-dialog modal-fullscreen">
@@ -138,6 +139,7 @@
 																				<div class="notice">Cette facture est le point de votre demande effectuée à la Poste du Bénin.
 																					
 																					<p> Statut de la demande: {%if demande.statut.id <= 2 %} EN COURS{%else%} {{demande.statut.libelle}}{%endif%}. </p>
+																					<p>Veuillez revenir le {{demande.date_butoire}} </p>
 																				</div>
 																			</div>
 																		</main>
@@ -238,7 +240,7 @@
 														</div>
 														<div class="modal-body text-center">La suppression de cette demande est irréversible.</div>
 														<div class="modal-footer">
-															<a href="/demande/delete/{{demande.id}}">
+															<a href="/demande/delete_from_agent/{{demande.id}}">
 																<button type="button" class="btn btn-danger">Continuer</button>
 															</a>
 															<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
@@ -246,6 +248,12 @@
 													</div>
 												</div>
 											</div>
+											{%else%}
+											<div class="div-center">
+												<span class="badge bg-danger">Supprimé</span>
+											</div>
+											
+											{%endif%}
                                         </td>
                                     </tr>
                                     {% endfor %}

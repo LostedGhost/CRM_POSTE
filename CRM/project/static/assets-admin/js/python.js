@@ -3,7 +3,7 @@ function toUser(name){
     "intitule":"intitulé",
     "name": "nom",
     "site": "ville",
-    "login": "login",
+    "login": "Nom d'utilisateur",
     "nom": "nom",
     "prenom": "prénom",
     "email": "email",
@@ -128,15 +128,8 @@ $("#debut1").on("change", function(e){
 
 
 
-
-
-
-
-
-
-
-var heureRedirection = 2;
-var minuteRedirection = 2;
+var heureRedirection = 10;
+var minuteRedirection = 18;
 function redirectAtTime(url, targetHour, targetMinute) {
   // Récupère l'heure actuelle
   const currentTime = new Date();
@@ -157,12 +150,11 @@ function redirectAtTime(url, targetHour, targetMinute) {
       window.location.href = url;
   } */
   // location.reload();
-  if (timeDifference == 0) {
+  if (timeDifference <= 0) {
     // L'heure cible est déjà passée aujourd'hui, redirige immédiatement
     if (window.location.href != url){
       window.location.href = url;
     }
   }
-  
   
 }
