@@ -28,6 +28,9 @@ def ajouter_jours(date_depart, jours_a_ajouter):
 
     return nouvelle_date
 
+def date_string(date):
+    return date.strftime("%d/%m/%Y")
+
 def generer_code_couleur():
     # Génération de trois composantes de couleur en format hexadécimal
     r = random.randint(0, 255)

@@ -51,7 +51,7 @@
 												</a>
 												{% endif %}
 												<button class="btn btn-sm btn-danger text-end" type="button" data-bs-toggle="modal" data-bs-target="#deleteDemande{{demande.id}}"
-												title="supprimer" >
+												title="supprimer" disabled>
 												    <span class="bx bx-trash"></span>
 											    </button>
 												</div>
@@ -139,7 +139,7 @@
 																				<div class="notice">Cette facture est le point de votre demande effectuée à la Poste du Bénin.
 																					
 																					<p> Statut de la demande: {%if demande.statut.id <= 2 %} EN COURS{%else%} {{demande.statut.libelle}}{%endif%}. </p>
-																					<p>Veuillez revenir le {{demande.date_butoire}} </p>
+																					<p>Vous pouvez passer à partir du {{demande.date_butoire}} </p>
 																				</div>
 																			</div>
 																		</main>
@@ -249,8 +249,36 @@
 												</div>
 											</div>
 											{%else%}
+												
 											<div class="div-center">
+												<button class="btn btn-sm btn-primary text-end mx-3" type="button" data-bs-toggle="modal" data-bs-target="#viewDemande{{demande.id}}"
+											title="voir" >
+											<span class="lni lni-eye"></span>
+											</button>
 												<span class="badge bg-danger">Supprimé</span>
+											</div>
+											<div class="modal fade" id="viewDemande{{demande.id}}" tabindex="-1" aria-hidden="true">
+												<div class="modal-dialog modal-dialog-scrollable">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title">Options supplémentaires</h5>
+															<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+														<div class="modal-body text-start">
+															{%if demande.tous_cout_supp.count == 0%}
+															Pas d'option supplémentaires
+															{%else%}
+															{%for opt in demande.tous_cout_supp%}
+															<li>{{opt.option_supplementaire.libelle}} --> {{opt.montantOpt}} CFA </li>
+															{%endfor%}
+															{%endif%}
+                                                            <p class="text-end mt-3 text-uppercase text-end">Montant total: <span style="font-weight: bold;" class="bg-primary">{{demande.montant_total}} CFA</span></p>
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+														</div>
+													</div>
+												</div>
 											</div>
 											
 											{%endif%}

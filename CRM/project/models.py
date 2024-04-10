@@ -259,12 +259,12 @@ class Demande(BaseEntity):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="client_demande")
     agent = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, related_name="agent_demande")
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name="service_demande")
-    statut = models.ForeignKey(StatutDemande, on_delete=models.CASCADE, related_name="statut_demande")
+    statut = models.ForeignKey(StatutDemande, on_delete=models  .CASCADE, related_name="statut_demande")
     observations = models.TextField(default="RAS")
     is_deleted = models.BooleanField(default=False)
     
     def date_butoire(self):
-        return ajouter_jours(self.date_creation, self.service.delai)
+        return date_string(ajouter_jours(self.date_creation, self.service.delai))
     
     def optionsSupplementaires(self):
         return OptionSupplementaireDemande.objects.filter(demande=self)

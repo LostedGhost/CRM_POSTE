@@ -30,7 +30,6 @@ def index(request):
     if user_identifiant is None:
         return redirect("/login")
     user = Utilisateur.objects.get(id=user_identifiant)
-    print(INFINITY_DATE)
     """ 
     user = Utilisateur.objects.filter(date_cessation=INFINITY_DATE).get(code=user.code)
     request.session['user'] = user.id """
@@ -108,7 +107,6 @@ def logout(request):
 
 def profile(request):
     user_identifiant = request.session.get('user')
-    print(user_identifiant)
     error = request.session.pop('error', None)
     success = request.session.pop('success', None)
     if user_identifiant is None:
@@ -135,6 +133,7 @@ def profile(request):
                    "success":success,
                    }
                   )
+
 def liste_agence_leader(request):
     user_identifiant = request.session.get('user')
     error = request.session.pop('error', None)

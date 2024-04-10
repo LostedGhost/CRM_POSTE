@@ -1,0 +1,4 @@
+- Gestion immobilière de la Poste (IMMOPOSTE)
+(Année de construction, toutes les modifications des biens immobiliers)
+
+- Gestion du pack informatique de la Poste (matériel, logiciels, maintenance)
