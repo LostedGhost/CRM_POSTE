@@ -264,7 +264,8 @@ class Demande(BaseEntity):
     is_deleted = models.BooleanField(default=False)
     
     def date_butoire(self):
-        return date_string(ajouter_jours(self.date_creation, self.service.delai))
+        premier = Demande.objects.filter(code=self.code).first()
+        return date_string(ajouter_jours(premier.date_creation, self.service.delai))
     
     def optionsSupplementaires(self):
         return OptionSupplementaireDemande.objects.filter(demande=self)
