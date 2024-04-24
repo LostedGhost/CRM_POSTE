@@ -128,8 +128,8 @@ $("#debut1").on("change", function(e){
 
 
 
-var heureRedirection = 16;
-var minuteRedirection = 40;
+var heureRedirection = 18;
+var minuteRedirection = 0;
 function redirectAtTime(url, targetHour, targetMinute) {
   // Récupère l'heure actuelle
   const currentTime = new Date();
