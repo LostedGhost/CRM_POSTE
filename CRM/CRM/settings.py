@@ -106,7 +106,7 @@ WSGI_APPLICATION = 'CRM.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'DATABASES/test2.db',
+        'NAME': BASE_DIR / 'DATABASES/dep1.db',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
